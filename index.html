@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Happy Birthday Cary! 🎉</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Handwritten Style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Canvas Confetti for fun animations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="min-h-screen">
+    
+    <!-- Confetti Canvas (rendered by canvas-confetti library) -->
+    <canvas id="confetti-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></canvas>
+    
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-12 animate-fadeIn relative z-10">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-bounce-slow header-text">
+                🎉 Happy Birthday, Cary! 🎉
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 subheader-text">
+                Leave a special birthday message for Cary!
+            </p>
+            
+            <!-- Add Message Button -->
+            <button id="openModalBtn" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-300 animate-pulse-soft">
+                ✨ Add Your Message ✨
+            </button>
+        </header>
+        
+        <!-- Polaroid Drop Zone -->
+        <section id="polaroidZone" class="polaroid-zone">
+            <!-- Polaroid photos will drop here -->
+            <div id="loadingIndicator" class="text-center py-12">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                <p class="mt-4 text-white text-lg font-semibold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Loading birthday wishes...</p>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Modal for Adding Message -->
+    <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 transform transition-all animate-scaleIn">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">✍️ Your Message</h2>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 text-3xl leading-none">
+                    &times;
+                </button>
+            </div>
+            
+            <!-- Message Form -->
+            <form id="messageForm" class="space-y-6">
+                <!-- Name Input -->
+                <div>
+                    <label for="nameInput" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Your Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="nameInput" 
+                        required 
+                        placeholder="Enter your name"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+                    >
+                </div>
+                
+                <!-- Message Input -->
+                <div>
+                    <label for="messageInput" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Birthday Message
+                    </label>
+                    <textarea 
+                        id="messageInput" 
+                        required 
+                        rows="4" 
+                        placeholder="Write your birthday wishes for Cary..."
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all resize-none"
+                    ></textarea>
+                </div>
+                
+                <!-- File Upload -->
+                <div>
+                    <label for="fileInput" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Add Photo/Video (Optional)
+                    </label>
+                    <input 
+                        type="file" 
+                        id="fileInput" 
+                        accept="image/*,video/*"
+                        class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 transition-all cursor-pointer"
+                    >
+                    <p class="text-xs text-gray-500 mt-2">Max 100MB • Images or Videos</p>
+                </div>
+                
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    class="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+                >
+                    🎈 Send Birthday Wishes 🎈
+                </button>
+                
+                <!-- Upload Progress -->
+                <div id="uploadProgress" class="hidden">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progressBar" class="bg-gradient-to-r from-pink-500 to-purple-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p id="progressText" class="text-sm text-gray-600 mt-2 text-center">Uploading...</p>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, push, onChildAdded, query, orderByChild, limitToLast } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+        
+        // Make Firebase services globally available
+        window.firebaseModules = {
+            initializeApp,
+            getDatabase,
+            ref,
+            push,
+            onChildAdded,
+            query,
+            orderByChild,
+            limitToLast,
+            getStorage,
+            storageRef,
+            uploadBytesResumable,
+            getDownloadURL
+        };
+        
+        // Initialize Firebase (config loaded from firebase-config.js)
+        window.initializeFirebase();
+    </script>
+    
+    <!-- Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Main Application Script -->
+    <script src="script.js"></script>
+    
+</body>
+</html>
+

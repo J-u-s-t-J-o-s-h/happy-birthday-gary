@@ -1,0 +1,519 @@
+/* ========================================
+   HAPPY BIRTHDAY CARY - CUSTOM STYLES
+   Playful, cheerful theme with animations
+   ======================================== */
+
+/* Root Variables for Theme Colors */
+:root {
+    --color-primary-pink: #ec4899;
+    --color-primary-purple: #9333ea;
+    --color-primary-blue: #3b82f6;
+    --color-primary-yellow: #fbbf24;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Warm Birthday Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #FDB777 0%, #FD8D69 35%, #FF8BA7 70%, #FBAED2 100%);
+    z-index: -2;
+}
+
+/* Subtle Confetti Dots Background */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 3px),
+        radial-gradient(circle at 85% 30%, rgba(255, 215, 0, 0.4) 0%, transparent 4px),
+        radial-gradient(circle at 45% 15%, rgba(255, 182, 193, 0.4) 0%, transparent 3px),
+        radial-gradient(circle at 70% 45%, rgba(173, 216, 230, 0.4) 0%, transparent 3px),
+        radial-gradient(circle at 25% 60%, rgba(221, 160, 221, 0.4) 0%, transparent 4px),
+        radial-gradient(circle at 90% 65%, rgba(255, 255, 255, 0.4) 0%, transparent 3px),
+        radial-gradient(circle at 10% 80%, rgba(255, 192, 203, 0.4) 0%, transparent 3px),
+        radial-gradient(circle at 60% 85%, rgba(255, 215, 0, 0.4) 0%, transparent 4px),
+        radial-gradient(circle at 35% 40%, rgba(173, 216, 230, 0.4) 0%, transparent 3px),
+        radial-gradient(circle at 80% 75%, rgba(255, 182, 193, 0.4) 0%, transparent 3px);
+    animation: pulseConfetti 3s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes pulseConfetti {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 0.9;
+    }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceSlow {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulseSoft {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Animation Classes */
+.animate-fadeIn {
+    animation: fadeIn 1s ease-out;
+}
+
+.animate-scaleIn {
+    animation: scaleIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+    animation: slideUp 0.5s ease-out;
+}
+
+.animate-bounce-slow {
+    animation: bounceSlow 3s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+    animation: pulseSoft 2s ease-in-out infinite;
+}
+
+
+/* ========================================
+   MODAL STYLES
+   ======================================== */
+
+#messageModal {
+    backdrop-filter: blur(5px);
+}
+
+#messageModal.active {
+    display: flex !important;
+}
+
+/* ========================================
+   CONFETTI CANVAS
+   ======================================== */
+
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ========================================
+   EMPTY STATE
+   ======================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #6b7280;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.empty-state-text {
+    font-size: 1.25rem;
+    color: #9ca3af;
+}
+
+/* ========================================
+   HEADER TEXT WITH READABLE STYLING
+   ======================================== */
+
+.header-text {
+    color: #ffffff;
+    text-shadow: 
+        4px 4px 0px rgba(0, 0, 0, 0.2),
+        6px 6px 0px rgba(0, 0, 0, 0.1),
+        2px 2px 10px rgba(0, 0, 0, 0.3);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.subheader-text {
+    color: #ffffff;
+    text-shadow: 
+        3px 3px 0px rgba(0, 0, 0, 0.2),
+        2px 2px 8px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+}
+
+/* ========================================
+   POLAROID DROP ZONE
+   ======================================== */
+
+.polaroid-zone {
+    position: relative;
+    min-height: 70vh;
+    padding: 2rem 1rem;
+    z-index: 10;
+}
+
+/* ========================================
+   POLAROID CARD STYLING
+   ======================================== */
+
+.polaroid-card {
+    position: absolute;
+    background: #ffffff;
+    padding: 1rem;
+    padding-bottom: 3.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center center;
+    width: 280px;
+    opacity: 0;
+    z-index: 1;
+}
+
+.polaroid-card.dropping {
+    animation: dropBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes dropBounce {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 0;
+    }
+    60% {
+        opacity: 1;
+    }
+    80% {
+        transform: translateY(10px);
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.polaroid-card:hover,
+.polaroid-card:active {
+    transform: scale(1.1) translateY(-10px) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    z-index: 1000 !important;
+}
+
+/* Yellow Tape Accent */
+.polaroid-card::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 20px;
+    background: rgba(255, 220, 100, 0.7);
+    border-left: 1px solid rgba(200, 180, 80, 0.3);
+    border-right: 1px solid rgba(200, 180, 80, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Photo Area */
+.polaroid-photo {
+    width: 100%;
+    height: 240px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.polaroid-photo img,
+.polaroid-photo video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Message without media - colorful background */
+.polaroid-photo.no-media {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.polaroid-message-only {
+    color: white;
+    font-family: 'Caveat', cursive;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+}
+
+/* Caption Area */
+.polaroid-caption {
+    font-family: 'Caveat', cursive;
+    color: #333;
+    text-align: center;
+    padding: 0 0.5rem;
+}
+
+.polaroid-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
+
+.polaroid-message {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #555;
+    max-height: 2.6em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .polaroid-card {
+        width: 240px;
+        padding: 0.875rem;
+        padding-bottom: 3rem;
+    }
+    
+    .polaroid-photo {
+        height: 200px;
+    }
+    
+    .polaroid-name {
+        font-size: 1.15rem;
+    }
+    
+    .polaroid-message {
+        font-size: 0.9rem;
+    }
+    
+    .polaroid-message-only {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .polaroid-card {
+        width: 200px;
+        padding: 0.75rem;
+        padding-bottom: 2.5rem;
+    }
+    
+    .polaroid-photo {
+        height: 170px;
+    }
+    
+    .polaroid-name {
+        font-size: 1rem;
+    }
+    
+    .polaroid-message {
+        font-size: 0.85rem;
+    }
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-primary-pink), var(--color-primary-purple));
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--color-primary-purple), var(--color-primary-blue));
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem !important;
+    }
+    
+    .message-card {
+        padding: 1rem;
+    }
+    
+    #messageModal > div {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+}
+
+/* ========================================
+   LOADING SPINNER
+   ======================================== */
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.gradient-text {
+    background: linear-gradient(90deg, 
+        var(--color-primary-pink), 
+        var(--color-primary-purple), 
+        var(--color-primary-blue)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.shadow-glow {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}
+
+/* ========================================
+   TOAST NOTIFICATIONS (for success/error)
+   ======================================== */
+
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    animation: slideUp 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 400px;
+}
+
+.toast.success {
+    border-left: 4px solid #10b981;
+}
+
+.toast.error {
+    border-left: 4px solid #ef4444;
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+}
+
+.toast-message {
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+@media (max-width: 640px) {
+    .toast {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+    }
+}
+
+

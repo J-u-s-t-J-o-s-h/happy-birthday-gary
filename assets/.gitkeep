@@ -1,0 +1,11 @@
+# Assets Directory
+
+This directory is for storing additional assets like:
+- Custom images
+- Icons
+- Fonts
+- Other media files
+
+Currently, all external resources are loaded via CDN.
+
+

@@ -1,0 +1,500 @@
+/* ========================================
+   HAPPY BIRTHDAY CARY - MAIN APPLICATION
+   Handles UI interactions, Firebase operations,
+   and real-time message feed
+   ======================================== */
+
+// Global variables
+let messagesRef;
+let polaroidQueue = [];
+let isDropping = false;
+let droppedCount = 0;
+
+/* ========================================
+   INITIALIZATION
+   ======================================== */
+
+window.initializeApp = function() {
+    console.log("🎉 Initializing Birthday App...");
+    
+    // Get Firebase references
+    const { ref, push, onChildAdded, query, orderByChild, limitToLast } = window.firebaseModules;
+    
+    // Create reference to messages in database
+    messagesRef = ref(window.database, 'messages');
+    
+    // Set up UI event listeners
+    initializeEventListeners();
+    
+    // Start listening for new messages
+    listenForMessages();
+    
+    // Start confetti animation
+    startConfetti();
+    
+    console.log("✅ App initialized successfully!");
+};
+
+/* ========================================
+   EVENT LISTENERS
+   ======================================== */
+
+function initializeEventListeners() {
+    // Modal controls
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const messageModal = document.getElementById('messageModal');
+    const messageForm = document.getElementById('messageForm');
+    
+    // Open modal
+    openModalBtn.addEventListener('click', () => {
+        messageModal.classList.add('active');
+        // Trigger confetti when opening modal
+        confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { y: 0.6 }
+        });
+    });
+    
+    // Close modal
+    closeModalBtn.addEventListener('click', closeModal);
+    
+    // Close modal when clicking outside
+    messageModal.addEventListener('click', (e) => {
+        if (e.target === messageModal) {
+            closeModal();
+        }
+    });
+    
+    // Handle form submission
+    messageForm.addEventListener('submit', handleFormSubmit);
+}
+
+function closeModal() {
+    const messageModal = document.getElementById('messageModal');
+    messageModal.classList.remove('active');
+    
+    // Reset form
+    document.getElementById('messageForm').reset();
+    
+    // Hide progress bar
+    const uploadProgress = document.getElementById('uploadProgress');
+    uploadProgress.classList.add('hidden');
+}
+
+/* ========================================
+   FORM SUBMISSION & FIREBASE UPLOAD
+   ======================================== */
+
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    
+    // Get form values
+    const nameInput = document.getElementById('nameInput');
+    const messageInput = document.getElementById('messageInput');
+    const fileInput = document.getElementById('fileInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    
+    // Validate inputs
+    const name = nameInput.value.trim();
+    const message = messageInput.value.trim();
+    const file = fileInput.files[0];
+    
+    if (!name || !message) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    // Disable submit button
+    submitBtn.disabled = true;
+    submitBtn.textContent = '📤 Sending...';
+    
+    try {
+        let mediaUrl = null;
+        let mediaType = null;
+        
+        // If file is selected, upload it first
+        if (file) {
+            // Validate file size (100MB max)
+            if (file.size > 100 * 1024 * 1024) {
+                throw new Error('File size must be less than 100MB');
+            }
+            
+            // Show upload progress
+            uploadProgress.classList.remove('hidden');
+            
+            // Upload file to Firebase Storage
+            const uploadResult = await uploadFile(file, (progress) => {
+                // Update progress bar
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `Uploading: ${Math.round(progress)}%`;
+            });
+            
+            mediaUrl = uploadResult.url;
+            mediaType = uploadResult.type;
+            
+            progressText.textContent = 'Upload complete! ✅';
+        }
+        
+        // Save message to Realtime Database
+        const { push } = window.firebaseModules;
+        
+        const messageData = {
+            name: name,
+            message: message,
+            mediaUrl: mediaUrl,
+            mediaType: mediaType,
+            timestamp: Date.now()
+        };
+        
+        await push(messagesRef, messageData);
+        
+        // Success!
+        showToast('🎉 Birthday wishes sent successfully!', 'success');
+        
+        // Trigger celebration confetti
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+        
+        // Close modal
+        closeModal();
+        
+    } catch (error) {
+        console.error('Error submitting message:', error);
+        showToast(`Error: ${error.message}`, 'error');
+    } finally {
+        // Re-enable submit button
+        submitBtn.disabled = false;
+        submitBtn.textContent = '🎈 Send Birthday Wishes 🎈';
+    }
+}
+
+/* ========================================
+   FIREBASE STORAGE UPLOAD
+   ======================================== */
+
+async function uploadFile(file, onProgress) {
+    const { storageRef, uploadBytesResumable, getDownloadURL } = window.firebaseModules;
+    
+    // Create unique filename
+    const timestamp = Date.now();
+    const filename = `${timestamp}_${file.name}`;
+    const filepath = `birthday-media/${filename}`;
+    
+    // Create storage reference
+    const fileRef = storageRef(window.storage, filepath);
+    
+    // Start upload
+    const uploadTask = uploadBytesResumable(fileRef, file);
+    
+    return new Promise((resolve, reject) => {
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+                // Progress callback
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                onProgress(progress);
+            },
+            (error) => {
+                // Error callback
+                reject(error);
+            },
+            async () => {
+                // Success callback
+                try {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    const mediaType = file.type.startsWith('video/') ? 'video' : 'image';
+                    resolve({ url: downloadURL, type: mediaType });
+                } catch (error) {
+                    reject(error);
+                }
+            }
+        );
+    });
+}
+
+/* ========================================
+   REAL-TIME MESSAGE FEED
+   ======================================== */
+
+function listenForMessages() {
+    const { onChildAdded, query, orderByChild } = window.firebaseModules;
+    const polaroidZone = document.getElementById('polaroidZone');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    
+    // Query messages ordered by timestamp
+    const messagesQuery = query(messagesRef, orderByChild('timestamp'));
+    
+    let isFirstLoad = true;
+    let messageCount = 0;
+    
+    // Listen for new messages
+    onChildAdded(messagesQuery, (snapshot) => {
+        const messageData = snapshot.val();
+        messageCount++;
+        
+        // Remove loading indicator on first message
+        if (isFirstLoad && loadingIndicator) {
+            loadingIndicator.remove();
+            isFirstLoad = false;
+        }
+        
+        // Add to polaroid queue
+        addToPolaroidQueue(messageData);
+    });
+    
+    // After 2 seconds, if no messages, show empty state
+    setTimeout(() => {
+        if (messageCount === 0 && loadingIndicator) {
+            loadingIndicator.innerHTML = `
+                <div class="text-center py-12">
+                    <span style="font-size: 4rem;">🎂</span>
+                    <p class="mt-4 text-white text-xl font-semibold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Be the first to wish Cary a happy birthday!</p>
+                </div>
+            `;
+        }
+    }, 2000);
+}
+
+/* ========================================
+   POLAROID CARD CREATION
+   ======================================== */
+
+function createPolaroidCard(data) {
+    const card = document.createElement('div');
+    card.className = 'polaroid-card';
+    
+    let photoHTML = '';
+    
+    if (data.mediaUrl) {
+        // Has media
+        if (data.mediaType === 'video') {
+            photoHTML = `
+                <div class="polaroid-photo">
+                    <video controls>
+                        <source src="${data.mediaUrl}" type="video/mp4">
+                    </video>
+                </div>
+            `;
+        } else {
+            photoHTML = `
+                <div class="polaroid-photo">
+                    <img src="${data.mediaUrl}" alt="Birthday photo" loading="lazy">
+                </div>
+            `;
+        }
+    } else {
+        // No media - show message in colorful background
+        photoHTML = `
+            <div class="polaroid-photo no-media">
+                <div class="polaroid-message-only">${escapeHtml(data.message)}</div>
+            </div>
+        `;
+    }
+    
+    card.innerHTML = `
+        ${photoHTML}
+        <div class="polaroid-caption">
+            <div class="polaroid-name">${escapeHtml(data.name)}</div>
+            ${data.mediaUrl ? `<div class="polaroid-message">${escapeHtml(data.message)}</div>` : ''}
+        </div>
+    `;
+    
+    return card;
+}
+
+/* ========================================
+   UTILITY FUNCTIONS
+   ======================================== */
+
+// Format timestamp to relative time
+function getTimeAgo(timestamp) {
+    const now = Date.now();
+    const diff = now - timestamp;
+    
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    if (seconds > 10) return `${seconds}s ago`;
+    return 'Just now';
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Show toast notification
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icon = type === 'success' ? '✅' : '❌';
+    
+    toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${escapeHtml(message)}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Remove toast after 3 seconds
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+/* ========================================
+   CONFETTI ANIMATION
+   ======================================== */
+
+function startConfetti() {
+    // Initial burst when page loads
+    setTimeout(() => {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }, 500);
+    
+    // Random confetti every 10-20 seconds
+    setInterval(() => {
+        if (Math.random() > 0.5) {
+            confetti({
+                particleCount: 30,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 }
+            });
+            confetti({
+                particleCount: 30,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 }
+            });
+        }
+    }, 15000);
+}
+
+/* ========================================
+   ERROR HANDLING
+   ======================================== */
+
+// Global error handler
+window.addEventListener('error', (event) => {
+    console.error('Application error:', event.error);
+});
+
+// Handle unhandled promise rejections
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('Unhandled promise rejection:', event.reason);
+});
+
+/* ========================================
+   POLAROID DROP ANIMATION SYSTEM
+   ======================================== */
+
+function addToPolaroidQueue(messageData) {
+    polaroidQueue.push(messageData);
+    
+    // Start dropping if not already dropping
+    if (!isDropping) {
+        dropNextPolaroid();
+    }
+}
+
+function dropNextPolaroid() {
+    if (polaroidQueue.length === 0) {
+        isDropping = false;
+        return;
+    }
+    
+    isDropping = true;
+    const messageData = polaroidQueue.shift();
+    
+    // Create polaroid card
+    const polaroidCard = createPolaroidCard(messageData);
+    const polaroidZone = document.getElementById('polaroidZone');
+    
+    // Calculate random position and rotation
+    const position = calculatePolaroidPosition();
+    const rotation = calculatePolaroidRotation();
+    
+    // Set initial position (will animate from top)
+    polaroidCard.style.left = position.x + 'px';
+    polaroidCard.style.top = position.y + 'px';
+    polaroidCard.style.transform = `rotate(${rotation}deg)`;
+    
+    // Add to DOM
+    polaroidZone.appendChild(polaroidCard);
+    
+    // Trigger drop animation
+    requestAnimationFrame(() => {
+        polaroidCard.classList.add('dropping');
+    });
+    
+    droppedCount++;
+    
+    // Drop next polaroid after delay (1.2 seconds)
+    setTimeout(() => {
+        dropNextPolaroid();
+    }, 1200);
+}
+
+function calculatePolaroidPosition() {
+    const polaroidZone = document.getElementById('polaroidZone');
+    const zoneWidth = polaroidZone.offsetWidth;
+    const zoneHeight = polaroidZone.offsetHeight;
+    
+    // Card dimensions
+    const cardWidth = window.innerWidth <= 480 ? 200 : window.innerWidth <= 768 ? 240 : 280;
+    const cardHeight = window.innerWidth <= 480 ? 280 : window.innerWidth <= 768 ? 320 : 380;
+    
+    // Random position in lower 2/3 of the zone
+    const minY = zoneHeight * 0.15; // Start at 15% down
+    const maxY = zoneHeight - cardHeight - 50; // Leave room at bottom
+    
+    const minX = 20;
+    const maxX = zoneWidth - cardWidth - 20;
+    
+    // Use a grid-based approach to distribute photos more evenly
+    const col = droppedCount % 4; // 4 columns
+    const row = Math.floor(droppedCount / 4);
+    
+    const colWidth = (maxX - minX) / 4;
+    const rowHeight = (maxY - minY) / 3;
+    
+    // Add randomness within the grid cell
+    const x = minX + (col * colWidth) + (Math.random() * colWidth * 0.6);
+    const y = minY + (row * rowHeight) + (Math.random() * rowHeight * 0.6);
+    
+    return {
+        x: Math.max(minX, Math.min(maxX, x)),
+        y: Math.max(minY, Math.min(maxY, y))
+    };
+}
+
+function calculatePolaroidRotation() {
+    // Random rotation between -20 and 20 degrees
+    const maxRotation = window.innerWidth <= 768 ? 12 : 20; // Smaller rotation on mobile
+    return (Math.random() * maxRotation * 2) - maxRotation;
+}
+
+console.log("📜 Script loaded successfully!");
+
