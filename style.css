@@ -24,7 +24,7 @@ body {
     position: relative;
 }
 
-/* Warm Birthday Background */
+/* Margaritaville Background - Sunset Beach Vibes */
 body::before {
     content: '';
     position: fixed;
@@ -32,11 +32,18 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #FDB777 0%, #FD8D69 35%, #FF8BA7 70%, #FBAED2 100%);
+    background: linear-gradient(180deg, 
+        #FFE082 0%,      /* Warm Sand/Sunset */
+        #FFD54F 15%,     /* Golden Hour */
+        #FFA726 30%,     /* Orange Sunset */
+        #29B6F6 50%,     /* Turquoise Water */
+        #0288D1 70%,     /* Caribbean Blue */
+        #01579B 100%     /* Deep Ocean */
+    );
     z-index: -2;
 }
 
-/* Subtle Confetti Dots Background */
+/* Tropical Sun - Big Beautiful Sunset */
 body::after {
     content: '';
     position: fixed;
@@ -45,26 +52,161 @@ body::after {
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 3px),
-        radial-gradient(circle at 85% 30%, rgba(255, 215, 0, 0.4) 0%, transparent 4px),
-        radial-gradient(circle at 45% 15%, rgba(255, 182, 193, 0.4) 0%, transparent 3px),
-        radial-gradient(circle at 70% 45%, rgba(173, 216, 230, 0.4) 0%, transparent 3px),
-        radial-gradient(circle at 25% 60%, rgba(221, 160, 221, 0.4) 0%, transparent 4px),
-        radial-gradient(circle at 90% 65%, rgba(255, 255, 255, 0.4) 0%, transparent 3px),
-        radial-gradient(circle at 10% 80%, rgba(255, 192, 203, 0.4) 0%, transparent 3px),
-        radial-gradient(circle at 60% 85%, rgba(255, 215, 0, 0.4) 0%, transparent 4px),
-        radial-gradient(circle at 35% 40%, rgba(173, 216, 230, 0.4) 0%, transparent 3px),
-        radial-gradient(circle at 80% 75%, rgba(255, 182, 193, 0.4) 0%, transparent 3px);
-    animation: pulseConfetti 3s ease-in-out infinite;
+        /* Big sunset glow */
+        radial-gradient(circle at 50% 20%, rgba(255, 200, 0, 0.4) 0%, rgba(255, 150, 0, 0.2) 20%, transparent 40%),
+        /* Sun rays */
+        radial-gradient(circle at 50% 20%, rgba(255, 223, 0, 0.3) 0%, transparent 35%),
+        /* Sparkles */
+        radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.6) 0%, transparent 2px),
+        radial-gradient(circle at 85% 25%, rgba(255, 255, 255, 0.5) 0%, transparent 3px),
+        radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.6) 0%, transparent 2px);
+    animation: tropicalShimmer 4s ease-in-out infinite;
     z-index: -1;
 }
 
-@keyframes pulseConfetti {
+/* Palm Tree Silhouettes */
+.palm-trees {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.palm-left,
+.palm-right {
+    position: absolute;
+    bottom: 0;
+    width: 250px;
+    height: 350px;
+    background-image: url('/assets/palmtree.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom center;
+    animation: palmSway 8s ease-in-out infinite;
+}
+
+.palm-left {
+    left: 20px;
+    bottom: 150px;
+    transform-origin: bottom center;
+    z-index: 3;
+}
+
+.palm-right {
+    right: 20px;
+    bottom: 150px;
+    transform-origin: bottom center;
+    transform: scaleX(-1);
+    animation-delay: -4s;
+    z-index: 3;
+}
+
+@keyframes palmSway {
     0%, 100% {
-        opacity: 0.6;
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(3deg);
+    }
+    75% {
+        transform: rotate(-3deg);
+    }
+}
+
+.palm-right {
+    animation-name: palmSwayReverse;
+}
+
+@keyframes palmSwayReverse {
+    0%, 100% {
+        transform: scaleX(-1) rotate(0deg);
+    }
+    25% {
+        transform: scaleX(-1) rotate(-3deg);
+    }
+    75% {
+        transform: scaleX(-1) rotate(3deg);
+    }
+}
+
+/* Sandy Beach */
+.sandy-beach {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(180deg, 
+        #F4E4C1 0%,
+        #E8D4A8 30%,
+        #DCC48F 60%,
+        #C9AC7F 100%
+    );
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Animated Ocean Waves - Above the Beach */
+.tropical-waves {
+    position: fixed;
+    bottom: 120px;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-repeat: repeat-x;
+}
+
+.wave-1 {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z" fill="%231abc9c" opacity="0.4"/></svg>');
+    background-size: 50% 100%;
+    animation: waveAnimation 25s linear infinite;
+    opacity: 0.6;
+}
+
+.wave-2 {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,40 C200,80 400,0 600,40 C800,80 1000,0 1200,40 L1200,120 L0,120 Z" fill="%2326C6DA" opacity="0.5"/></svg>');
+    background-size: 50% 100%;
+    animation: waveAnimation 20s linear infinite reverse;
+    opacity: 0.7;
+}
+
+.wave-3 {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,80 C300,120 600,40 900,80 C1050,100 1150,60 1200,80 L1200,120 L0,120 Z" fill="%2300BCD4" opacity="0.6"/></svg>');
+    background-size: 50% 100%;
+    animation: waveAnimation 30s linear infinite;
+    opacity: 0.8;
+}
+
+@keyframes waveAnimation {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes tropicalShimmer {
+    0%, 100% {
+        opacity: 0.7;
+        transform: translateY(0);
     }
     50% {
-        opacity: 0.9;
+        opacity: 1;
+        transform: translateY(-5px);
     }
 }
 
@@ -204,6 +346,7 @@ body::after {
         2px 2px 10px rgba(0, 0, 0, 0.3);
     font-weight: 900;
     letter-spacing: -0.02em;
+    word-spacing: 0.1em;
 }
 
 .subheader-text {
@@ -212,6 +355,39 @@ body::after {
         3px 3px 0px rgba(0, 0, 0, 0.2),
         2px 2px 8px rgba(0, 0, 0, 0.3);
     font-weight: 700;
+}
+
+/* Mobile header adjustments for better symmetry */
+@media (max-width: 768px) {
+    .header-text {
+        font-size: 2.5rem !important;
+        line-height: 1.2;
+        padding: 0 1rem;
+        text-align: center;
+        display: block;
+        width: 100%;
+    }
+    
+    .subheader-text {
+        font-size: 1.25rem !important;
+        line-height: 1.4;
+        padding: 0 1.5rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-text {
+        font-size: 2rem !important;
+        padding: 0 0.5rem;
+        text-align: center;
+    }
+    
+    .subheader-text {
+        font-size: 1.1rem !important;
+        padding: 0 1rem;
+        text-align: center;
+    }
 }
 
 /* ========================================
@@ -306,9 +482,9 @@ body::after {
     object-fit: cover;
 }
 
-/* Message without media - colorful background */
+/* Message without media - tropical gradient background */
 .polaroid-photo.no-media {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: linear-gradient(135deg, #06beb6 0%, #48b1bf 50%, #06beb6 100%);
     padding: 1.5rem;
     display: flex;
     align-items: center;

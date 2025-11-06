@@ -24,21 +24,37 @@
     <!-- Confetti Canvas (rendered by canvas-confetti library) -->
     <canvas id="confetti-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></canvas>
     
+    <!-- Tropical Waves -->
+    <div class="tropical-waves">
+        <div class="wave wave-1"></div>
+        <div class="wave wave-2"></div>
+        <div class="wave wave-3"></div>
+    </div>
+    
+    <!-- Sandy Beach -->
+    <div class="sandy-beach"></div>
+    
+    <!-- Palm Trees on Beach -->
+    <div class="palm-trees">
+        <div class="palm-left"></div>
+        <div class="palm-right"></div>
+    </div>
+    
     <!-- Main Container -->
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         
         <!-- Header Section -->
         <header class="text-center mb-12 animate-fadeIn relative z-10">
             <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-bounce-slow header-text">
-                🎉 Happy Birthday, Cary! 🎉
+                🌴 Happy Birthday, Cary! 🍹
             </h1>
             <p class="text-xl md:text-2xl mb-8 subheader-text">
                 Leave a special birthday message for Cary!
             </p>
             
             <!-- Add Message Button -->
-            <button id="openModalBtn" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-300 animate-pulse-soft">
-                ✨ Add Your Message ✨
+            <button id="openModalBtn" class="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-300 animate-pulse-soft">
+                🌺 Add Your Message 🌺
             </button>
         </header>
         
@@ -110,15 +126,15 @@
                 <button 
                     type="submit" 
                     id="submitBtn"
-                    class="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+                    class="w-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
                 >
-                    🎈 Send Birthday Wishes 🎈
+                    🏝️ Send Birthday Wishes 🏝️
                 </button>
                 
                 <!-- Upload Progress -->
                 <div id="uploadProgress" class="hidden">
                     <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div id="progressBar" class="bg-gradient-to-r from-pink-500 to-purple-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        <div id="progressBar" class="bg-gradient-to-r from-teal-400 to-cyan-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                     </div>
                     <p id="progressText" class="text-sm text-gray-600 mt-2 text-center">Uploading...</p>
                 </div>
