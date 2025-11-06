@@ -280,9 +280,9 @@ function listenForMessages() {
     setTimeout(() => {
         if (messageCount === 0 && loadingIndicator) {
             loadingIndicator.innerHTML = `
-                <div class="text-center py-12">
+                <div class="text-center py-12" style="position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 4; width: 100%; max-width: 600px;">
                     <span style="font-size: 4rem;">🎂</span>
-                    <p class="mt-4 text-white text-xl font-semibold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Be the first to wish Cary a happy birthday!</p>
+                    <p class="mt-4 text-xl font-bold" style="color: #8B6F47; text-shadow: 1px 1px 2px rgba(255,255,255,0.8), -1px -1px 1px rgba(0,0,0,0.2);">Be the first to wish Cary a happy birthday!</p>
                 </div>
             `;
         }
