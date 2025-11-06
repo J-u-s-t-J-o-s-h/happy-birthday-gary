@@ -44,15 +44,15 @@
  *    }
  */
 
-// 🔥 YOUR FIREBASE CONFIG
+// 🔥 FIREBASE CONFIG (using environment variables or fallback to hardcoded)
 const firebaseConfig = {
-    apiKey: "AIzaSyDCvADCJicq08CNdOwu75_LEmHyyAcEl3c",
-    authDomain: "happybirthdaycary-229e7.firebaseapp.com",
-    databaseURL: "https://happybirthdaycary-229e7-default-rtdb.firebaseio.com",
-    projectId: "happybirthdaycary-229e7",
-    storageBucket: "happybirthdaycary-229e7.firebasestorage.app",
-    messagingSenderId: "150506543209",
-    appId: "1:150506543209:web:525303ee9ffdb47a4ceaf8"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDCvADCJicq08CNdOwu75_LEmHyyAcEl3c",
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "happybirthdaycary-229e7.firebaseapp.com",
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "https://happybirthdaycary-229e7-default-rtdb.firebaseio.com",
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "happybirthdaycary-229e7",
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "happybirthdaycary-229e7.firebasestorage.app",
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "150506543209",
+    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:150506543209:web:525303ee9ffdb47a4ceaf8"
 };
 
 /*
