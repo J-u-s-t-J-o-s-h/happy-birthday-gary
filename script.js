@@ -12,6 +12,8 @@ let messagesRef;
 let polaroidQueue = [];
 let isDropping = false;
 let droppedCount = 0;
+let allMediaItems = []; // Store all media items for preview
+let currentPreviewIndex = 0;
 
 /* ========================================
    INITIALIZATION
@@ -76,6 +78,28 @@ function initializeEventListeners() {
     
     // Handle form submission
     messageForm.addEventListener('submit', handleFormSubmit);
+    
+    // Media preview modal controls
+    const mediaPreviewModal = document.getElementById('mediaPreviewModal');
+    const closePreviewBtn = document.getElementById('closePreviewBtn');
+    const prevMediaBtn = document.getElementById('prevMediaBtn');
+    const nextMediaBtn = document.getElementById('nextMediaBtn');
+    const previewOverlay = document.querySelector('.media-preview-overlay');
+    
+    closePreviewBtn.addEventListener('click', closeMediaPreview);
+    previewOverlay.addEventListener('click', closeMediaPreview);
+    
+    prevMediaBtn.addEventListener('click', () => navigatePreview(-1));
+    nextMediaBtn.addEventListener('click', () => navigatePreview(1));
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (mediaPreviewModal.classList.contains('active')) {
+            if (e.key === 'Escape') closeMediaPreview();
+            if (e.key === 'ArrowLeft') navigatePreview(-1);
+            if (e.key === 'ArrowRight') navigatePreview(1);
+        }
+    });
 }
 
 function closeModal() {
@@ -276,18 +300,22 @@ function createPolaroidCard(data) {
     let photoHTML = '';
     
     if (data.mediaUrl) {
-        // Has media
+        // Store media item for preview
+        const mediaIndex = allMediaItems.length;
+        allMediaItems.push(data);
+        
+        // Has media - make it clickable
         if (data.mediaType === 'video') {
             photoHTML = `
-                <div class="polaroid-photo">
-                    <video controls>
+                <div class="polaroid-photo" style="cursor: pointer;" data-media-index="${mediaIndex}">
+                    <video>
                         <source src="${data.mediaUrl}" type="video/mp4">
                     </video>
                 </div>
             `;
         } else {
             photoHTML = `
-                <div class="polaroid-photo">
+                <div class="polaroid-photo" style="cursor: pointer;" data-media-index="${mediaIndex}">
                     <img src="${data.mediaUrl}" alt="Birthday photo" loading="lazy">
                 </div>
             `;
@@ -308,6 +336,15 @@ function createPolaroidCard(data) {
             ${data.mediaUrl ? `<div class="polaroid-message">${escapeHtml(data.message)}</div>` : ''}
         </div>
     `;
+    
+    // Add click listener for media preview
+    if (data.mediaUrl) {
+        const photoDiv = card.querySelector('.polaroid-photo');
+        photoDiv.addEventListener('click', () => {
+            const index = parseInt(photoDiv.getAttribute('data-media-index'));
+            openMediaPreview(index);
+        });
+    }
     
     return card;
 }
@@ -496,6 +533,77 @@ function calculatePolaroidRotation() {
     // Random rotation between -20 and 20 degrees
     const maxRotation = window.innerWidth <= 768 ? 12 : 20; // Smaller rotation on mobile
     return (Math.random() * maxRotation * 2) - maxRotation;
+}
+
+/* ========================================
+   MEDIA PREVIEW FUNCTIONS
+   ======================================== */
+
+function openMediaPreview(index) {
+    currentPreviewIndex = index;
+    const modal = document.getElementById('mediaPreviewModal');
+    
+    // Show/hide nav buttons based on number of items
+    if (allMediaItems.length <= 1) {
+        modal.classList.add('single-media');
+    } else {
+        modal.classList.remove('single-media');
+    }
+    
+    updatePreviewContent();
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('active');
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMediaPreview() {
+    const modal = document.getElementById('mediaPreviewModal');
+    modal.classList.remove('active');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }, 300);
+}
+
+function navigatePreview(direction) {
+    currentPreviewIndex += direction;
+    
+    // Loop around
+    if (currentPreviewIndex < 0) {
+        currentPreviewIndex = allMediaItems.length - 1;
+    } else if (currentPreviewIndex >= allMediaItems.length) {
+        currentPreviewIndex = 0;
+    }
+    
+    updatePreviewContent();
+}
+
+function updatePreviewContent() {
+    const data = allMediaItems[currentPreviewIndex];
+    const container = document.getElementById('mediaPreviewContainer');
+    const author = document.querySelector('.media-preview-author');
+    const message = document.querySelector('.media-preview-message');
+    
+    // Update media
+    if (data.mediaType === 'video') {
+        container.innerHTML = `
+            <video controls autoplay>
+                <source src="${data.mediaUrl}" type="video/mp4">
+            </video>
+        `;
+    } else {
+        container.innerHTML = `
+            <img src="${data.mediaUrl}" alt="Birthday photo">
+        `;
+    }
+    
+    // Update caption
+    author.textContent = `From: ${data.name}`;
+    message.textContent = data.message;
 }
 
 console.log("📜 Script loaded successfully!");

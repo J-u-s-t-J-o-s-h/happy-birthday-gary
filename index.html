@@ -126,6 +126,23 @@
         </div>
     </div>
     
+    <!-- Media Preview Modal -->
+    <div id="mediaPreviewModal" class="media-preview-modal hidden">
+        <div class="media-preview-overlay"></div>
+        <button id="closePreviewBtn" class="media-preview-close">&times;</button>
+        <button id="prevMediaBtn" class="media-preview-nav media-preview-prev">‹</button>
+        <button id="nextMediaBtn" class="media-preview-nav media-preview-next">›</button>
+        <div class="media-preview-content">
+            <div id="mediaPreviewContainer" class="media-preview-container">
+                <!-- Media will be inserted here -->
+            </div>
+            <div id="mediaPreviewCaption" class="media-preview-caption">
+                <div class="media-preview-author"></div>
+                <div class="media-preview-message"></div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Main Application Script (includes Firebase) -->
     <script type="module" src="/script.js"></script>
     
