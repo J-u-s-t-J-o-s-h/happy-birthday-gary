@@ -4,6 +4,9 @@
    and real-time message feed
    ======================================== */
 
+// Import Firebase
+import { database, storage, ref, push, onChildAdded, query, orderByChild, storageRef, uploadBytesResumable, getDownloadURL } from './firebase-config.js';
+
 // Global variables
 let messagesRef;
 let polaroidQueue = [];
@@ -14,14 +17,11 @@ let droppedCount = 0;
    INITIALIZATION
    ======================================== */
 
-window.initializeApp = function() {
+function initializeApp() {
     console.log("🎉 Initializing Birthday App...");
     
-    // Get Firebase references
-    const { ref, push, onChildAdded, query, orderByChild, limitToLast } = window.firebaseModules;
-    
     // Create reference to messages in database
-    messagesRef = ref(window.database, 'messages');
+    messagesRef = ref(database, 'messages');
     
     // Set up UI event listeners
     initializeEventListeners();
@@ -33,7 +33,14 @@ window.initializeApp = function() {
     startConfetti();
     
     console.log("✅ App initialized successfully!");
-};
+}
+
+// Start app when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    initializeApp();
+}
 
 /* ========================================
    EVENT LISTENERS
@@ -141,8 +148,6 @@ async function handleFormSubmit(e) {
         }
         
         // Save message to Realtime Database
-        const { push } = window.firebaseModules;
-        
         const messageData = {
             name: name,
             message: message,
@@ -181,15 +186,13 @@ async function handleFormSubmit(e) {
    ======================================== */
 
 async function uploadFile(file, onProgress) {
-    const { storageRef, uploadBytesResumable, getDownloadURL } = window.firebaseModules;
-    
     // Create unique filename
     const timestamp = Date.now();
     const filename = `${timestamp}_${file.name}`;
     const filepath = `birthday-media/${filename}`;
     
     // Create storage reference
-    const fileRef = storageRef(window.storage, filepath);
+    const fileRef = storageRef(storage, filepath);
     
     // Start upload
     const uploadTask = uploadBytesResumable(fileRef, file);
@@ -225,7 +228,6 @@ async function uploadFile(file, onProgress) {
    ======================================== */
 
 function listenForMessages() {
-    const { onChildAdded, query, orderByChild } = window.firebaseModules;
     const polaroidZone = document.getElementById('polaroidZone');
     const loadingIndicator = document.getElementById('loadingIndicator');
     

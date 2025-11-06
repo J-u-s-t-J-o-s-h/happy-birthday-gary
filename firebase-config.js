@@ -1,48 +1,10 @@
 /* ========================================
-   FIREBASE CONFIGURATION
+   FIREBASE CONFIGURATION - MODULAR SDK
    ======================================== */
 
-/*
- * SETUP INSTRUCTIONS:
- * 
- * 1. Go to https://console.firebase.google.com/
- * 2. Create a new project (or use existing one)
- * 3. Click "Add app" and select "Web"
- * 4. Copy your Firebase configuration object
- * 5. Replace the firebaseConfig object below with your config
- * 
- * 6. Enable Realtime Database:
- *    - Go to "Realtime Database" in Firebase Console
- *    - Click "Create Database"
- *    - Start in test mode (or configure rules later)
- * 
- * 7. Enable Firebase Storage:
- *    - Go to "Storage" in Firebase Console
- *    - Click "Get Started"
- *    - Start in test mode (or configure rules later)
- * 
- * 8. (IMPORTANT) Set Security Rules for Production:
- *    
- *    Realtime Database Rules (test mode - open to all):
- *    {
- *      "rules": {
- *        "messages": {
- *          ".read": true,
- *          ".write": true
- *        }
- *      }
- *    }
- *    
- *    Storage Rules (test mode - open to all):
- *    rules_version = '2';
- *    service firebase.storage {
- *      match /b/{bucket}/o {
- *        match /birthday-media/{allPaths=**} {
- *          allow read, write: if request.resource.size < 100 * 1024 * 1024;
- *        }
- *      }
- *    }
- */
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, push, onChildAdded, query, orderByChild } from 'firebase/database';
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 // 🔥 FIREBASE CONFIG (using environment variables or fallback to hardcoded)
 const firebaseConfig = {
@@ -55,55 +17,17 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:150506543209:web:525303ee9ffdb47a4ceaf8"
 };
 
-/*
- * EXAMPLE CONFIG (DO NOT USE - THIS IS JUST AN EXAMPLE):
- * 
- * const firebaseConfig = {
- *     apiKey: "AIzaSyAbc123DefGhiJklMnoPqrStuVwxYz",
- *     authDomain: "carybday-12345.firebaseapp.com",
- *     databaseURL: "https://carybday-12345-default-rtdb.firebaseio.com",
- *     projectId: "carybday-12345",
- *     storageBucket: "carybday-12345.appspot.com",
- *     messagingSenderId: "123456789012",
- *     appId: "1:123456789012:web:abcdef1234567890"
- * };
- */
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase when modules are loaded
-window.initializeFirebase = function() {
-    const { initializeApp, getDatabase, getStorage } = window.firebaseModules;
-    
-    try {
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        
-        // Initialize services
-        window.database = getDatabase(app);
-        window.storage = getStorage(app);
-        
-        console.log("✅ Firebase initialized successfully!");
-        
-        // Start the app
-        if (typeof window.initializeApp === 'function') {
-            window.initializeApp();
-        }
-    } catch (error) {
-        console.error("❌ Firebase initialization error:", error);
-        
-        // Show user-friendly error message
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        if (loadingIndicator) {
-            loadingIndicator.innerHTML = `
-                <div class="text-center py-12">
-                    <span class="text-6xl">⚠️</span>
-                    <p class="mt-4 text-red-600 font-semibold">Firebase Configuration Error</p>
-                    <p class="mt-2 text-gray-600">Please check your firebase-config.js file</p>
-                    <p class="mt-2 text-sm text-gray-500">See console for details</p>
-                </div>
-            `;
-        }
-    }
-};
+// Export Firebase services
+export const database = getDatabase(app);
+export const storage = getStorage(app);
+
+// Export Firebase functions
+export { ref, push, onChildAdded, query, orderByChild, storageRef, uploadBytesResumable, getDownloadURL };
+
+console.log("✅ Firebase initialized successfully!");
 
 /* ========================================
    LOCAL TESTING
