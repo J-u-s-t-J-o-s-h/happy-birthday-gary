@@ -297,17 +297,17 @@ function createPolaroidCard(data) {
     const card = document.createElement('div');
     card.className = 'polaroid-card';
     
+    // Store ALL items for preview (with or without media)
+    const itemIndex = allMediaItems.length;
+    allMediaItems.push(data);
+    
     let photoHTML = '';
     
     if (data.mediaUrl) {
-        // Store media item for preview
-        const mediaIndex = allMediaItems.length;
-        allMediaItems.push(data);
-        
         // Has media - make it clickable
         if (data.mediaType === 'video') {
             photoHTML = `
-                <div class="polaroid-photo" style="cursor: pointer;" data-media-index="${mediaIndex}">
+                <div class="polaroid-photo" style="cursor: pointer;" data-media-index="${itemIndex}">
                     <video>
                         <source src="${data.mediaUrl}" type="video/mp4">
                     </video>
@@ -315,15 +315,15 @@ function createPolaroidCard(data) {
             `;
         } else {
             photoHTML = `
-                <div class="polaroid-photo" style="cursor: pointer;" data-media-index="${mediaIndex}">
+                <div class="polaroid-photo" style="cursor: pointer;" data-media-index="${itemIndex}">
                     <img src="${data.mediaUrl}" alt="Birthday photo" loading="lazy">
                 </div>
             `;
         }
     } else {
-        // No media - show message in colorful background
+        // No media - show message in colorful background (also clickable!)
         photoHTML = `
-            <div class="polaroid-photo no-media">
+            <div class="polaroid-photo no-media" style="cursor: pointer;" data-media-index="${itemIndex}">
                 <div class="polaroid-message-only">${escapeHtml(data.message)}</div>
             </div>
         `;
@@ -337,14 +337,12 @@ function createPolaroidCard(data) {
         </div>
     `;
     
-    // Add click listener for media preview
-    if (data.mediaUrl) {
-        const photoDiv = card.querySelector('.polaroid-photo');
-        photoDiv.addEventListener('click', () => {
-            const index = parseInt(photoDiv.getAttribute('data-media-index'));
-            openMediaPreview(index);
-        });
-    }
+    // Add click listener for ALL polaroids (with or without media)
+    const photoDiv = card.querySelector('.polaroid-photo');
+    photoDiv.addEventListener('click', () => {
+        const index = parseInt(photoDiv.getAttribute('data-media-index'));
+        openMessagePreview(index);
+    });
     
     return card;
 }
@@ -539,7 +537,7 @@ function calculatePolaroidRotation() {
    MEDIA PREVIEW FUNCTIONS
    ======================================== */
 
-function openMediaPreview(index) {
+function openMessagePreview(index) {
     currentPreviewIndex = index;
     const modal = document.getElementById('mediaPreviewModal');
     
@@ -588,22 +586,31 @@ function updatePreviewContent() {
     const author = document.querySelector('.media-preview-author');
     const message = document.querySelector('.media-preview-message');
     
-    // Update media
-    if (data.mediaType === 'video') {
-        container.innerHTML = `
-            <video controls autoplay>
-                <source src="${data.mediaUrl}" type="video/mp4">
-            </video>
-        `;
+    // Update media or show message-only view
+    if (data.mediaUrl) {
+        if (data.mediaType === 'video') {
+            container.innerHTML = `
+                <video controls autoplay>
+                    <source src="${data.mediaUrl}" type="video/mp4">
+                </video>
+            `;
+        } else {
+            container.innerHTML = `
+                <img src="${data.mediaUrl}" alt="Birthday photo">
+            `;
+        }
     } else {
+        // No media - show large message with gradient background
         container.innerHTML = `
-            <img src="${data.mediaUrl}" alt="Birthday photo">
+            <div style="background: linear-gradient(135deg, #06beb6 0%, #48b1bf 50%, #06beb6 100%); padding: 3rem; border-radius: 1rem; max-width: 600px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
+                <p style="color: white; font-family: 'Caveat', cursive; font-size: 2rem; line-height: 1.6; text-align: center; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-weight: 600;">${escapeHtml(data.message)}</p>
+            </div>
         `;
     }
     
     // Update caption
     author.textContent = `From: ${data.name}`;
-    message.textContent = data.message;
+    message.textContent = data.mediaUrl ? data.message : '';
 }
 
 console.log("📜 Script loaded successfully!");
