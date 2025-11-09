@@ -82,11 +82,13 @@ function initializeEventListeners() {
     // Media preview modal controls
     const mediaPreviewModal = document.getElementById('mediaPreviewModal');
     const closePreviewBtn = document.getElementById('closePreviewBtn');
+    const downloadMediaBtn = document.getElementById('downloadMediaBtn');
     const prevMediaBtn = document.getElementById('prevMediaBtn');
     const nextMediaBtn = document.getElementById('nextMediaBtn');
     const previewOverlay = document.querySelector('.media-preview-overlay');
     
     closePreviewBtn.addEventListener('click', closeMediaPreview);
+    downloadMediaBtn.addEventListener('click', downloadCurrentMedia);
     previewOverlay.addEventListener('click', closeMediaPreview);
     
     prevMediaBtn.addEventListener('click', () => navigatePreview(-1));
@@ -307,9 +309,9 @@ function createPolaroidCard(data) {
         // Has media - make it clickable
         if (data.mediaType === 'video') {
             photoHTML = `
-                <div class="polaroid-photo" style="cursor: pointer;" data-media-index="${itemIndex}">
-                    <video>
-                        <source src="${data.mediaUrl}" type="video/mp4">
+                <div class="polaroid-photo has-video" style="cursor: pointer;" data-media-index="${itemIndex}">
+                    <video preload="metadata">
+                        <source src="${data.mediaUrl}#t=0.5" type="video/mp4">
                     </video>
                 </div>
             `;
@@ -540,12 +542,21 @@ function calculatePolaroidRotation() {
 function openMessagePreview(index) {
     currentPreviewIndex = index;
     const modal = document.getElementById('mediaPreviewModal');
+    const downloadBtn = document.getElementById('downloadMediaBtn');
     
     // Show/hide nav buttons based on number of items
     if (allMediaItems.length <= 1) {
         modal.classList.add('single-media');
     } else {
         modal.classList.remove('single-media');
+    }
+    
+    // Show/hide download button based on media
+    const currentItem = allMediaItems[index];
+    if (currentItem.mediaUrl) {
+        downloadBtn.classList.remove('hidden');
+    } else {
+        downloadBtn.classList.add('hidden');
     }
     
     updatePreviewContent();
@@ -577,7 +588,45 @@ function navigatePreview(direction) {
         currentPreviewIndex = 0;
     }
     
+    // Update download button visibility
+    const downloadBtn = document.getElementById('downloadMediaBtn');
+    const currentItem = allMediaItems[currentPreviewIndex];
+    if (currentItem.mediaUrl) {
+        downloadBtn.classList.remove('hidden');
+    } else {
+        downloadBtn.classList.add('hidden');
+    }
+    
     updatePreviewContent();
+}
+
+function downloadCurrentMedia() {
+    const data = allMediaItems[currentPreviewIndex];
+    
+    // Only download if there's media
+    if (!data.mediaUrl) {
+        return;
+    }
+    
+    // Create download link
+    const link = document.createElement('a');
+    link.href = data.mediaUrl;
+    
+    // Generate filename
+    const timestamp = new Date().toISOString().slice(0, 10);
+    const extension = data.mediaType === 'video' ? 'mp4' : 'jpg';
+    const filename = `cary-birthday-${data.name.replace(/\s+/g, '-')}-${timestamp}.${extension}`;
+    
+    link.download = filename;
+    link.target = '_blank';
+    
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Show success toast
+    showToast(`💾 Download started: ${filename}`, 'success');
 }
 
 function updatePreviewContent() {
