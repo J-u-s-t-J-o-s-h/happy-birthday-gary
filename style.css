@@ -347,6 +347,11 @@ body::after {
     font-weight: 900;
     letter-spacing: -0.02em;
     word-spacing: 0.1em;
+    transition: transform 0.2s ease;
+}
+
+.header-text:active {
+    transform: scale(0.98) !important;
 }
 
 .subheader-text {
@@ -396,10 +401,20 @@ body::after {
 
 .polaroid-zone {
     position: relative;
-    min-height: 70vh;
-    padding: 2rem 1rem;
-    padding-bottom: 220px;
+    min-height: 80vh;
+    padding: 1rem;
+    padding-bottom: 250px;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 480px) {
+    .polaroid-zone {
+        padding: 0.5rem;
+        padding-bottom: 200px;
+    }
 }
 
 /* ========================================
@@ -562,45 +577,58 @@ body::after {
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .polaroid-card {
-        width: 240px;
-        padding: 0.875rem;
-        padding-bottom: 3rem;
-    }
-    
-    .polaroid-photo {
-        height: 200px;
-    }
-    
-    .polaroid-name {
-        font-size: 1.15rem;
-    }
-    
-    .polaroid-message {
-        font-size: 0.9rem;
-    }
-    
-    .polaroid-message-only {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .polaroid-card {
         width: 200px;
         padding: 0.75rem;
         padding-bottom: 2.5rem;
     }
     
     .polaroid-photo {
-        height: 170px;
+        height: 180px;
     }
     
     .polaroid-name {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     
     .polaroid-message {
         font-size: 0.85rem;
+    }
+    
+    .polaroid-message-only {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .polaroid-card {
+        width: 150px;
+        padding: 0.6rem;
+        padding-bottom: 2rem;
+    }
+    
+    .polaroid-photo {
+        height: 140px;
+    }
+    
+    .polaroid-card::before {
+        width: 60px;
+        height: 16px;
+        top: -6px;
+    }
+    
+    .polaroid-name {
+        font-size: 0.95rem;
+    }
+    
+    .polaroid-message {
+        font-size: 0.75rem;
+        max-height: 2.25em;
+        -webkit-line-clamp: 2;
+    }
+    
+    .polaroid-message-only {
+        font-size: 0.9rem;
+        padding: 1rem;
     }
 }
 

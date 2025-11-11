@@ -49,6 +49,22 @@ if (document.readyState === 'loading') {
    ======================================== */
 
 function initializeEventListeners() {
+    // Birthday title confetti trigger
+    const birthdayTitle = document.getElementById('birthdayTitle');
+    birthdayTitle.addEventListener('click', () => {
+        // Trigger a big celebratory confetti burst!
+        confetti({
+            particleCount: 150,
+            spread: 100,
+            origin: { y: 0.4 }
+        });
+        // Add a fun scale animation
+        birthdayTitle.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+            birthdayTitle.style.transform = '';
+        }, 200);
+    });
+    
     // Modal controls
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -501,37 +517,43 @@ function calculatePolaroidPosition() {
     const zoneWidth = polaroidZone.offsetWidth;
     const zoneHeight = polaroidZone.offsetHeight;
     
-    // Card dimensions
-    const cardWidth = window.innerWidth <= 480 ? 200 : window.innerWidth <= 768 ? 240 : 280;
-    const cardHeight = window.innerWidth <= 480 ? 280 : window.innerWidth <= 768 ? 320 : 380;
+    // Card dimensions with spacing - smaller cards for mobile
+    const cardWidth = window.innerWidth <= 480 ? 150 : window.innerWidth <= 768 ? 200 : 280;
+    const cardHeight = window.innerWidth <= 480 ? 210 : window.innerWidth <= 768 ? 280 : 380;
     
-    // Random position in lower 2/3 of the zone
-    const minY = zoneHeight * 0.15; // Start at 15% down
-    const maxY = zoneHeight - cardHeight - 50; // Leave room at bottom
+    // Spacing between cards - tighter on mobile
+    const horizontalSpacing = window.innerWidth <= 480 ? 15 : window.innerWidth <= 768 ? 25 : 60;
+    const verticalSpacing = window.innerWidth <= 480 ? 20 : window.innerWidth <= 768 ? 30 : 70;
     
-    const minX = 20;
-    const maxX = zoneWidth - cardWidth - 20;
+    // Calculate number of columns that can fit
+    const availableWidth = zoneWidth - 20; // 10px padding on each side for mobile
+    const columnsCount = Math.max(2, Math.floor(availableWidth / (cardWidth + horizontalSpacing)));
     
-    // Use a grid-based approach to distribute photos more evenly
-    const col = droppedCount % 4; // 4 columns
-    const row = Math.floor(droppedCount / 4);
+    // Calculate positions
+    const col = droppedCount % columnsCount;
+    const row = Math.floor(droppedCount / columnsCount);
     
-    const colWidth = (maxX - minX) / 4;
-    const rowHeight = (maxY - minY) / 3;
+    // Center the grid horizontally
+    const totalGridWidth = (columnsCount * cardWidth) + ((columnsCount - 1) * horizontalSpacing);
+    const startX = Math.max(10, (zoneWidth - totalGridWidth) / 2);
     
-    // Add randomness within the grid cell
-    const x = minX + (col * colWidth) + (Math.random() * colWidth * 0.6);
-    const y = minY + (row * rowHeight) + (Math.random() * rowHeight * 0.6);
+    // Position with grid layout
+    const baseX = startX + (col * (cardWidth + horizontalSpacing));
+    const baseY = 50 + (row * (cardHeight + verticalSpacing));
+    
+    // Add slight random offset for organic feel (but keep it organized) - less on mobile
+    const randomOffsetX = window.innerWidth <= 480 ? (Math.random() - 0.5) * 10 : (Math.random() - 0.5) * 30;
+    const randomOffsetY = window.innerWidth <= 480 ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 20;
     
     return {
-        x: Math.max(minX, Math.min(maxX, x)),
-        y: Math.max(minY, Math.min(maxY, y))
+        x: baseX + randomOffsetX,
+        y: baseY + randomOffsetY
     };
 }
 
 function calculatePolaroidRotation() {
-    // Random rotation between -20 and 20 degrees
-    const maxRotation = window.innerWidth <= 768 ? 12 : 20; // Smaller rotation on mobile
+    // Random rotation - reduced for cleaner look
+    const maxRotation = window.innerWidth <= 768 ? 6 : 10; // Even smaller rotation for better organization
     return (Math.random() * maxRotation * 2) - maxRotation;
 }
 
