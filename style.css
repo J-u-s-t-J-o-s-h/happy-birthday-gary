@@ -54,6 +54,44 @@ body {
     50% { opacity: 0.8; }
 }
 
+/* Police Car Chase - Three.js 3D car at bottom */
+.police-car-chase-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 32vh;
+    min-height: 160px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.police-car-chase-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .police-car-chase-container {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .police-car-chase-container {
+        height: 28vh;
+        min-height: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .police-car-chase-container {
+        height: 24vh;
+        min-height: 120px;
+    }
+}
+
 /* Badge Watermark */
 .badge-watermark {
     position: fixed;
