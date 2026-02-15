@@ -1,14 +1,17 @@
 /* ========================================
-   HAPPY BIRTHDAY CARY - CUSTOM STYLES
-   Playful, cheerful theme with animations
+   GRANDPA GARY'S 80TH - POLICE THEME
+   Deep Blues, Gold, Police Tape, Badges
    ======================================== */
 
 /* Root Variables for Theme Colors */
 :root {
-    --color-primary-pink: #ec4899;
-    --color-primary-purple: #9333ea;
-    --color-primary-blue: #3b82f6;
-    --color-primary-yellow: #fbbf24;
+    --color-police-blue: #0a192f;
+    --color-police-blue-light: #112240;
+    --color-gold: #FFD700;
+    --color-gold-dim: #C5A000;
+    --color-silver: #C0C0C0;
+    --color-alert-red: #ef4444;
+    --color-alert-blue: #3b82f6;
 }
 
 /* Base Styles */
@@ -19,389 +22,237 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto Slab', serif;
+    background-color: var(--color-police-blue);
+    color: #ffffff;
     overflow-x: hidden;
     position: relative;
-}
-
-/* Margaritaville Background - Sunset Beach Vibes */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, 
-        #FFE082 0%,      /* Warm Sand/Sunset */
-        #FFD54F 15%,     /* Golden Hour */
-        #FFA726 30%,     /* Orange Sunset */
-        #29B6F6 50%,     /* Turquoise Water */
-        #0288D1 70%,     /* Caribbean Blue */
-        #01579B 100%     /* Deep Ocean */
-    );
-    z-index: -2;
-}
-
-/* Tropical Sun - Big Beautiful Sunset */
-body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    /* Subtle asphalt texture */
     background-image: 
-        /* Big sunset glow */
-        radial-gradient(circle at 50% 20%, rgba(255, 200, 0, 0.4) 0%, rgba(255, 150, 0, 0.2) 20%, transparent 40%),
-        /* Sun rays */
-        radial-gradient(circle at 50% 20%, rgba(255, 223, 0, 0.3) 0%, transparent 35%),
-        /* Sparkles */
-        radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.6) 0%, transparent 2px),
-        radial-gradient(circle at 85% 25%, rgba(255, 255, 255, 0.5) 0%, transparent 3px),
-        radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.6) 0%, transparent 2px);
-    animation: tropicalShimmer 4s ease-in-out infinite;
-    z-index: -1;
+        radial-gradient(var(--color-police-blue-light) 15%, transparent 16%),
+        radial-gradient(var(--color-police-blue-light) 15%, transparent 16%);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
 }
 
-/* Palm Tree Silhouettes */
-.palm-trees {
+/* Police Siren Glow Animation (Red/Blue Pulse) */
+.siren-glow {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(239, 68, 68, 0.15), transparent 40%);
+    animation: sirenPulse 4s infinite ease-in-out;
 }
 
-.palm-left,
-.palm-right {
-    position: absolute;
-    bottom: 0;
-    width: 250px;
-    height: 350px;
-    background-image: url('/assets/palmtree.svg');
+@keyframes sirenPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+}
+
+/* Badge Watermark */
+.badge-watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vh;
+    height: 80vh;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23FFD700' opacity='0.03'%3E%3Cpath d='M50 0 L90 20 L80 90 L50 100 L20 90 L10 20 Z' /%3E%3C/svg%3E");
     background-repeat: no-repeat;
+    background-position: center;
     background-size: contain;
-    background-position: bottom center;
-    animation: palmSway 8s ease-in-out infinite;
-}
-
-.palm-left {
-    left: 20px;
-    bottom: 150px;
-    transform-origin: bottom center;
-    z-index: 3;
-}
-
-.palm-right {
-    right: 20px;
-    bottom: 150px;
-    transform-origin: bottom center;
-    transform: scaleX(-1);
-    animation-delay: -4s;
-    z-index: 3;
-}
-
-@keyframes palmSway {
-    0%, 100% {
-        transform: rotate(0deg);
-    }
-    25% {
-        transform: rotate(3deg);
-    }
-    75% {
-        transform: rotate(-3deg);
-    }
-}
-
-.palm-right {
-    animation-name: palmSwayReverse;
-}
-
-@keyframes palmSwayReverse {
-    0%, 100% {
-        transform: scaleX(-1) rotate(0deg);
-    }
-    25% {
-        transform: scaleX(-1) rotate(-3deg);
-    }
-    75% {
-        transform: scaleX(-1) rotate(3deg);
-    }
-}
-
-/* Sandy Beach */
-.sandy-beach {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 180px;
-    background: linear-gradient(180deg, 
-        #F4E4C1 0%,
-        #E8D4A8 30%,
-        #DCC48F 60%,
-        #C9AC7F 100%
-    );
-    z-index: 2;
+    z-index: 0;
     pointer-events: none;
 }
 
-/* Animated Ocean Waves - Above the Beach */
-.tropical-waves {
+/* ========================================
+   POLICE TAPE ANIMATIONS
+   ======================================== */
+.police-tape-container {
     position: fixed;
-    bottom: 120px;
-    left: 0;
-    width: 100%;
-    height: 150px;
-    z-index: 1;
-    pointer-events: none;
+    width: 120%;
+    height: 50px;
+    background: #fbbf24;
+    left: -10%;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    overflow: hidden;
+    border-top: 4px solid black;
+    border-bottom: 4px solid black;
 }
 
-.wave {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 200%;
-    height: 100%;
-    background-repeat: repeat-x;
-}
-
-.wave-1 {
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z" fill="%231abc9c" opacity="0.4"/></svg>');
-    background-size: 50% 100%;
-    animation: waveAnimation 25s linear infinite;
-    opacity: 0.6;
-}
-
-.wave-2 {
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,40 C200,80 400,0 600,40 C800,80 1000,0 1200,40 L1200,120 L0,120 Z" fill="%2326C6DA" opacity="0.5"/></svg>');
-    background-size: 50% 100%;
-    animation: waveAnimation 20s linear infinite reverse;
-    opacity: 0.7;
-}
-
-.wave-3 {
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,80 C300,120 600,40 900,80 C1050,100 1150,60 1200,80 L1200,120 L0,120 Z" fill="%2300BCD4" opacity="0.6"/></svg>');
-    background-size: 50% 100%;
-    animation: waveAnimation 30s linear infinite;
-    opacity: 0.8;
-}
-
-@keyframes waveAnimation {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-@keyframes tropicalShimmer {
-    0%, 100% {
-        opacity: 0.7;
-        transform: translateY(0);
-    }
-    50% {
-        opacity: 1;
-        transform: translateY(-5px);
-    }
-}
-
-/* ========================================
-   ANIMATIONS
-   ======================================== */
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes bounceSlow {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-@keyframes pulseSoft {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-}
-
-/* Animation Classes */
-.animate-fadeIn {
-    animation: fadeIn 1s ease-out;
-}
-
-.animate-scaleIn {
-    animation: scaleIn 0.3s ease-out;
-}
-
-.animate-slideUp {
-    animation: slideUp 0.5s ease-out;
-}
-
-.animate-bounce-slow {
-    animation: bounceSlow 3s ease-in-out infinite;
-}
-
-.animate-pulse-soft {
-    animation: pulseSoft 2s ease-in-out infinite;
-}
-
-
-/* ========================================
-   MODAL STYLES
-   ======================================== */
-
-#messageModal {
-    backdrop-filter: blur(5px);
-}
-
-#messageModal.active {
-    display: flex !important;
-}
-
-/* ========================================
-   CONFETTI CANVAS
-   ======================================== */
-
-#confetti-canvas {
-    position: fixed;
+.top-tape {
     top: 0;
-    left: 0;
+    transform: rotate(2deg) translateY(-15px);
+}
+
+.bottom-tape {
+    bottom: 0;
+    transform: rotate(-2deg) translateY(15px);
+    background: #000; /* Crime scene style often yellow, but let's mix it up or keep yellow */
+    background: #fbbf24; 
+}
+
+.police-tape {
+    white-space: nowrap;
+    color: black;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    animation: tapeScroll 20s linear infinite;
+    letter-spacing: 2px;
+}
+
+.police-tape-reverse {
+    white-space: nowrap;
+    color: black;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    animation: tapeScrollReverse 20s linear infinite;
+    letter-spacing: 2px;
+}
+
+@keyframes tapeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes tapeScrollReverse {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+}
+
+/* Divider Tape */
+.police-tape-divider {
+    height: 10px;
+    background: repeating-linear-gradient(
+        45deg,
+        #000,
+        #000 20px,
+        #fbbf24 20px,
+        #fbbf24 40px
+    );
     width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #fff;
 }
+
 
 /* ========================================
-   EMPTY STATE
+   HEADER & TYPOGRAPHY
    ======================================== */
-
-.empty-state {
-    text-align: center;
-    padding: 3rem 2rem;
-    color: #6b7280;
-}
-
-.empty-state-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    display: block;
-}
-
-.empty-state-text {
-    font-size: 1.25rem;
-    color: #9ca3af;
-}
-
-/* ========================================
-   HEADER TEXT WITH READABLE STYLING
-   ======================================== */
+.font-oswald { font-family: 'Oswald', sans-serif; }
+.text-gold { color: var(--color-gold); text-shadow: 2px 2px 0px #000; }
 
 .header-text {
-    color: #ffffff;
+    font-family: 'Oswald', sans-serif;
     text-shadow: 
-        4px 4px 0px rgba(0, 0, 0, 0.2),
-        6px 6px 0px rgba(0, 0, 0, 0.1),
-        2px 2px 10px rgba(0, 0, 0, 0.3);
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    word-spacing: 0.1em;
-    transition: transform 0.2s ease;
-}
-
-.header-text:active {
-    transform: scale(0.98) !important;
+        4px 4px 0px #000,
+        0px 0px 20px rgba(255, 215, 0, 0.4);
+    letter-spacing: 1px;
 }
 
 .subheader-text {
-    color: #ffffff;
-    text-shadow: 
-        3px 3px 0px rgba(0, 0, 0, 0.2),
-        2px 2px 8px rgba(0, 0, 0, 0.3);
-    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
 }
 
-/* Mobile header adjustments for better symmetry */
-@media (max-width: 768px) {
-    .header-text {
-        font-size: 2.5rem !important;
-        line-height: 1.2;
-        padding: 0 1rem;
-        text-align: center;
-        display: block;
-        width: 100%;
-    }
-    
-    .subheader-text {
-        font-size: 1.25rem !important;
-        line-height: 1.4;
-        padding: 0 1.5rem;
-        text-align: center;
-    }
+/* Badge Icon CSS */
+.police-badge-icon {
+    width: 100px;
+    height: 120px;
+    background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 85% 100%, 50% 100%, 15% 100%, 0% 25%); /* Simple shield shape */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    border: 2px solid #fff; /* Not visible with clip-path usually, but good fallback */
+    position: relative;
+    animation: badgeShine 4s infinite;
 }
 
-@media (max-width: 480px) {
-    .header-text {
-        font-size: 2rem !important;
-        padding: 0 0.5rem;
-        text-align: center;
-    }
-    
-    .subheader-text {
-        font-size: 1.1rem !important;
-        padding: 0 1rem;
-        text-align: center;
-    }
+.police-badge-icon::after {
+    content: '';
+    position: absolute;
+    top: 5px; left: 5px; right: 5px; bottom: 5px;
+    border: 2px solid #000;
+    clip-path: polygon(50% 5%, 95% 25%, 82% 95%, 50% 95%, 18% 95%, 5% 25%);
+}
+
+.police-badge-icon span {
+    color: #000;
+    font-family: 'Oswald', sans-serif;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.badge-number {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+@keyframes badgeShine {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.05); filter: brightness(1.2); }
+}
+
+/* Button Styling */
+.police-btn-large {
+    background: linear-gradient(to bottom, #1e3a8a, #172554);
+    border: 2px solid var(--color-gold);
+    color: var(--color-gold);
+    padding: 1rem 2rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 8px;
+    box-shadow: 
+        0 4px 6px rgba(0,0,0,0.4),
+        0 0 15px rgba(255, 215, 0, 0.2);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.police-btn-large::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.police-btn-large:hover::before {
+    left: 100%;
+}
+
+.police-btn-large:hover {
+    background: linear-gradient(to bottom, #1e40af, #1e3a8a);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
 }
 
 /* ========================================
-   POLAROID DROP ZONE
+   CASE FILES (POLAROID) STYLING
    ======================================== */
-
 .polaroid-zone {
     position: relative;
-    min-height: 80vh;
+    min-height: 60vh;
     padding: 1rem;
     padding-bottom: 250px;
     z-index: 10;
@@ -410,30 +261,36 @@ body::after {
     align-items: center;
 }
 
-@media (max-width: 480px) {
-    .polaroid-zone {
-        padding: 0.5rem;
-        padding-bottom: 200px;
-    }
-}
-
-/* ========================================
-   POLAROID CARD STYLING
-   ======================================== */
-
 .polaroid-card {
     position: absolute;
-    background: #ffffff;
-    padding: 1rem;
-    padding-bottom: 3.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+    background: #fdfdfd; 
+    /* Manilla folder style or just white case file */
+    padding: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    border: 1px solid #ccc;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: center center;
-    width: 280px;
+    width: 260px;
     opacity: 0;
     z-index: 1;
+}
+
+/* Paperclip or Tape on Case File */
+.polaroid-card::before {
+    content: 'EVIDENCE';
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: #ef4444; /* Red stamp */
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    font-weight: bold;
+    transform: rotate(-15deg);
+    border: 1px solid white;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    z-index: 2;
 }
 
 .polaroid-card.dropping {
@@ -441,537 +298,223 @@ body::after {
 }
 
 @keyframes dropBounce {
-    0% {
-        transform: translateY(-100vh) rotate(0deg);
-        opacity: 0;
-    }
-    60% {
-        opacity: 1;
-    }
-    80% {
-        transform: translateY(10px);
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    0% { transform: scale(3) translateY(-100vh) rotate(0deg); opacity: 0; }
+    70% { transform: scale(1); opacity: 1; }
+    100% { opacity: 1; }
 }
 
-.polaroid-card:hover,
-.polaroid-card:active {
-    transform: scale(1.1) translateY(-10px) !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    z-index: 1000 !important;
+.polaroid-card:hover {
+    transform: scale(1.1) rotate(0deg) !important;
+    z-index: 100 !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
 }
 
-/* Yellow Tape Accent */
-.polaroid-card::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 20px;
-    background: rgba(255, 220, 100, 0.7);
-    border-left: 1px solid rgba(200, 180, 80, 0.3);
-    border-right: 1px solid rgba(200, 180, 80, 0.3);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Photo Area */
 .polaroid-photo {
     width: 100%;
-    height: 240px;
-    background: #f5f5f5;
+    height: 200px;
+    background: #333;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
 }
 
-.polaroid-photo img,
-.polaroid-photo video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.polaroid-photo img, .polaroid-photo video {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: sepia(0.2) contrast(1.1); /* Slight vintage report feel */
 }
 
-/* Video play button overlay */
-.polaroid-photo.has-video {
-    position: relative;
-}
-
-.polaroid-photo.has-video::after {
-    content: '▶';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 3px solid white;
-    border-radius: 50%;
-    color: white;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    pointer-events: none;
-}
-
-.polaroid-photo video {
-    pointer-events: none;
-}
-
-/* Message without media - tropical gradient background */
+/* No Media - Typewriter Style */
 .polaroid-photo.no-media {
-    background: linear-gradient(135deg, #06beb6 0%, #48b1bf 50%, #06beb6 100%);
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: #fff;
+    background-image: repeating-linear-gradient(#fff 0px, #fff 24px, #0088ff22 25px);
+    padding: 1rem;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    align-items: flex-start;
+    overflow-y: hidden;
 }
 
 .polaroid-message-only {
-    color: white;
-    font-family: 'Caveat', cursive;
-    font-size: 1.25rem;
-    line-height: 1.6;
-    text-align: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    font-weight: 600;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 
-/* Caption Area */
 .polaroid-caption {
-    font-family: 'Caveat', cursive;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0.5rem;
     color: #333;
-    text-align: center;
-    padding: 0 0.5rem;
+    background: #f0f0f0;
+    border-top: 1px solid #ddd;
 }
 
 .polaroid-name {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-    line-height: 1.2;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: var(--color-police-blue);
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 4px;
+    padding-bottom: 2px;
 }
 
 .polaroid-message {
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.3;
+    font-size: 0.85rem;
     color: #555;
-    max-height: 2.6em;
-    overflow: hidden;
+    line-height: 1.2;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .polaroid-card {
-        width: 200px;
-        padding: 0.75rem;
-        padding-bottom: 2.5rem;
-    }
-    
-    .polaroid-photo {
-        height: 180px;
-    }
-    
-    .polaroid-name {
-        font-size: 1.1rem;
-    }
-    
-    .polaroid-message {
-        font-size: 0.85rem;
-    }
-    
-    .polaroid-message-only {
-        font-size: 1rem;
-    }
-}
 
-@media (max-width: 480px) {
-    .polaroid-card {
-        width: 150px;
-        padding: 0.6rem;
-        padding-bottom: 2rem;
-    }
-    
-    .polaroid-photo {
-        height: 140px;
-    }
-    
-    .polaroid-card::before {
-        width: 60px;
-        height: 16px;
-        top: -6px;
-    }
-    
-    .polaroid-name {
-        font-size: 0.95rem;
-    }
-    
-    .polaroid-message {
-        font-size: 0.75rem;
-        max-height: 2.25em;
-        -webkit-line-clamp: 2;
-    }
-    
-    .polaroid-message-only {
-        font-size: 0.9rem;
-        padding: 1rem;
-    }
+/* ========================================
+   TOAST NOTIFICATIONS
+   ======================================== */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 99999;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.3s ease;
+}
+.toast.success {
+    background: #166534;
+    color: #fff;
+    border: 2px solid var(--color-gold);
+}
+.toast.error {
+    background: #991b1b;
+    color: #fff;
+    border: 2px solid #ef4444;
 }
 
 /* ========================================
-   MEDIA PREVIEW MODAL
+   MODAL & FORMS
    ======================================== */
+#messageModal { backdrop-filter: blur(10px); }
+#messageModal.active { display: flex !important; }
 
+/* Custom Scrollbar for Modal */
+textarea::-webkit-scrollbar { width: 8px; }
+textarea::-webkit-scrollbar-track { background: #1f2937; }
+textarea::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 4px; }
+
+
+/* ========================================
+   MEDIA PREVIEW (Dark Room Style)
+   ======================================== */
 .media-preview-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s ease;
 }
-
-.media-preview-modal.active {
-    opacity: 1;
-}
+.media-preview-modal.active { opacity: 1; }
 
 .media-preview-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-}
-
-.media-preview-close {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 10002;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-.media-preview-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: rotate(90deg);
-}
-
-.media-preview-download {
-    position: absolute;
-    top: 1.5rem;
-    right: 5rem;
-    width: 50px;
-    height: 50px;
-    background: rgba(74, 222, 128, 0.2);
-    border: 2px solid rgba(74, 222, 128, 0.5);
-    border-radius: 50%;
-    color: #4ade80;
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 10002;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-.media-preview-download:hover {
-    background: rgba(74, 222, 128, 0.3);
-    transform: translateY(3px);
-}
-
-.media-preview-download.hidden {
-    display: none;
-}
-
-.media-preview-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    color: white;
-    font-size: 2.5rem;
-    cursor: pointer;
-    z-index: 10002;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-.media-preview-nav:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-50%) scale(1.1);
-}
-
-.media-preview-prev {
-    left: 2rem;
-}
-
-.media-preview-next {
-    right: 2rem;
+    position: absolute; width: 100%; height: 100%;
+    background: rgba(10, 25, 47, 0.98); /* Deep Blue */
 }
 
 .media-preview-content {
-    position: relative;
-    z-index: 10001;
-    max-width: 90vw;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    position: relative; z-index: 10001;
+    max-width: 90vw; max-height: 90vh;
+    border: 4px solid var(--color-gold);
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.1);
+    background: #000;
+    padding: 20px;
 }
 
-.media-preview-container {
-    max-width: 90vw;
-    max-height: 75vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-}
-
-.media-preview-container img,
-.media-preview-container video {
-    max-width: 100%;
-    max-height: 75vh;
-    object-fit: contain;
-    border-radius: 1rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+.media-preview-container img, .media-preview-container video {
+    max-height: 70vh;
+    border: 2px solid #333;
 }
 
 .media-preview-caption {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 1.5rem 2rem;
-    border-radius: 1rem;
-    text-align: center;
-    max-width: 600px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background: #111;
+    color: #fff;
+    padding: 15px;
+    margin-top: 15px;
+    border-left: 4px solid var(--color-gold);
+    font-family: 'Courier New', monospace;
 }
 
 .media-preview-author {
-    font-family: 'Caveat', cursive;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 0.5rem;
+    color: var(--color-gold);
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
-.media-preview-message {
-    font-family: 'Caveat', cursive;
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: #555;
-    line-height: 1.5;
+/* Nav Buttons */
+.media-preview-nav, .media-preview-close, .media-preview-download {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    z-index: 10002;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.media-preview-nav:hover, .media-preview-close:hover {
+    background: var(--color-gold);
+    color: #000;
 }
 
-/* Mobile responsive */
+.media-preview-nav {
+    position: absolute; top: 50%; width: 50px; height: 50px;
+    border-radius: 50%; font-size: 2rem;
+    display: flex; align-items: center; justify-content: center;
+}
+.media-preview-prev { left: 20px; }
+.media-preview-next { right: 20px; }
+
+.media-preview-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 40px; height: 40px; font-size: 2rem;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+}
+
+.media-preview-download {
+    position: absolute; top: 20px; right: 80px;
+    width: 40px; height: 40px; font-size: 1.5rem;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes bounceSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes pulseSoft { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+.animate-fadeIn { animation: fadeIn 1s ease-out; }
+.animate-scaleIn { animation: scaleIn 0.3s ease-out; }
+.animate-bounce-slow { animation: bounceSlow 3s ease-in-out infinite; }
+.animate-pulse-soft { animation: pulseSoft 2s ease-in-out infinite; }
+
+/* Responsive */
 @media (max-width: 768px) {
-    .media-preview-close {
-        width: 40px;
-        height: 40px;
-        font-size: 1.5rem;
-        top: 1rem;
-        right: 1rem;
-    }
+    .police-tape { font-size: 1rem; letter-spacing: 1px; }
+    .header-text { font-size: 3.5rem !important; }
+    .subheader-text { font-size: 1.2rem !important; }
+    .police-badge-icon { width: 70px; height: 90px; }
+    .badge-number { font-size: 1.8rem; }
     
-    .media-preview-nav {
-        width: 50px;
-        height: 50px;
-        font-size: 2rem;
-    }
-    
-    .media-preview-prev {
-        left: 1rem;
-    }
-    
-    .media-preview-next {
-        right: 1rem;
-    }
-    
-    .media-preview-container {
-        max-height: 60vh;
-    }
-    
-    .media-preview-container img,
-    .media-preview-container video {
-        max-height: 60vh;
-    }
-    
-    .media-preview-caption {
-        padding: 1rem 1.5rem;
-    }
-    
-    .media-preview-author {
-        font-size: 1.3rem;
-    }
-    
-    .media-preview-message {
-        font-size: 1rem;
-    }
+    .polaroid-card { width: 160px; }
+    .polaroid-photo { height: 140px; }
 }
-
-/* Hide navigation when only one media item */
-.media-preview-modal.single-media .media-preview-nav {
-    display: none;
-}
-
-/* ========================================
-   SCROLLBAR STYLING
-   ======================================== */
-
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--color-primary-pink), var(--color-primary-purple));
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--color-primary-purple), var(--color-primary-blue));
-}
-
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
-
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2.5rem !important;
-    }
-    
-    .message-card {
-        padding: 1rem;
-    }
-    
-    #messageModal > div {
-        margin: 1rem;
-        padding: 1.5rem;
-    }
-}
-
-/* ========================================
-   LOADING SPINNER
-   ======================================== */
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-/* ========================================
-   UTILITY CLASSES
-   ======================================== */
-
-.gradient-text {
-    background: linear-gradient(90deg, 
-        var(--color-primary-pink), 
-        var(--color-primary-purple), 
-        var(--color-primary-blue)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.shadow-glow {
-    box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
-}
-
-/* ========================================
-   TOAST NOTIFICATIONS (for success/error)
-   ======================================== */
-
-.toast {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background: white;
-    padding: 1rem 1.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    z-index: 10000;
-    animation: slideUp 0.3s ease-out;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    max-width: 400px;
-}
-
-.toast.success {
-    border-left: 4px solid #10b981;
-}
-
-.toast.error {
-    border-left: 4px solid #ef4444;
-}
-
-.toast-icon {
-    font-size: 1.5rem;
-}
-
-.toast-message {
-    font-size: 0.875rem;
-    color: #374151;
-}
-
-@media (max-width: 640px) {
-    .toast {
-        bottom: 1rem;
-        right: 1rem;
-        left: 1rem;
-        max-width: none;
-    }
-}
-
-

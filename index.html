@@ -1,152 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎉 Happy Birthday Cary! 🎉</title>
-    
+    <title>👮 Grandpa Gary's 80th Birthday Bash! 🚓</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts - Handwritten Style -->
+
+    <!-- Google Fonts - Sturdy & Classic -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <!-- Oswego/Impact style for headers, Roboto/Open Sans for body -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto+Slab:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
-    
+
     <!-- Canvas Confetti for fun animations -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- HEIC to JPG Converter -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 </head>
-<body class="min-h-screen">
-    
-    <!-- Confetti Canvas (rendered by canvas-confetti library) -->
+
+<body class="min-h-screen police-theme">
+
+    <!-- Confetti Canvas -->
     <canvas id="confetti-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></canvas>
-    
-    <!-- Tropical Waves -->
-    <div class="tropical-waves">
-        <div class="wave wave-1"></div>
-        <div class="wave wave-2"></div>
-        <div class="wave wave-3"></div>
+
+    <!-- Police Line Tape (Top) -->
+    <div class="police-tape-container top-tape">
+        <div class="police-tape">POLICE LINE DO NOT CROSS &nbsp;&nbsp;&nbsp; POLICE LINE DO NOT CROSS &nbsp;&nbsp;&nbsp;
+            POLICE LINE DO NOT CROSS</div>
     </div>
-    
-    <!-- Sandy Beach -->
-    <div class="sandy-beach"></div>
-    
-    <!-- Palm Trees on Beach -->
-    <div class="palm-trees">
-        <div class="palm-left"></div>
-        <div class="palm-right"></div>
-    </div>
-    
+
+    <!-- Background Badge Watermark -->
+    <div class="badge-watermark"></div>
+
+    <!-- Traffic Lights / Siren Glow -->
+    <div class="siren-glow"></div>
+
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-8 max-w-6xl">
-        
+    <div class="container mx-auto px-4 py-12 max-w-6xl relative z-10">
+
         <!-- Header Section -->
-        <header class="text-center mb-12 animate-fadeIn relative z-10">
-            <h1 id="birthdayTitle" class="text-5xl md:text-7xl font-bold mb-4 animate-bounce-slow header-text" style="cursor: pointer; user-select: none;">
-                🌴 Happy Birthday, Cary! 🍹
+        <header class="text-center mb-16 animate-fadeIn relative">
+            <div class="badge-container mx-auto mb-6">
+                <!-- CSS Badge Representation -->
+                <div class="police-badge-icon">
+                    <span>POLICE</span>
+                    <span class="badge-number">80</span>
+                </div>
+            </div>
+
+            <h1 id="birthdayTitle" class="text-6xl md:text-8xl font-bold mb-2 animate-bounce-slow header-text uppercase"
+                style="cursor: pointer; user-select: none;">
+                <span class="text-gold">Grandpa Gary's</span>
+                <br>
+                <span class="text-white">80th Birthday Bash!</span>
             </h1>
-            <p class="text-xl md:text-2xl mb-8 subheader-text">
-                Leave a special birthday message for Cary!
+
+            <div class="police-tape-divider my-6"></div>
+
+            <p class="text-xl md:text-3xl mb-10 subheader-text font-serif text-gray-300">
+                Come celebrate with our favorite retired officer!
+                <br>
+                <span class="text-gold text-lg mt-2 block">JUNE 15TH • THE COMMUNITY HALL</span>
             </p>
-            
+
             <!-- Add Message Button -->
-            <button id="openModalBtn" class="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-300 animate-pulse-soft">
-                🌺 Add Your Message 🌺
+            <button id="openModalBtn"
+                class="police-btn-large transform hover:scale-105 transition-all duration-300 animate-pulse-soft">
+                🚔 Leave a Message 🚔
             </button>
         </header>
-        
-        <!-- Polaroid Drop Zone -->
+
+        <!-- Case Files Drop Zone (formerly Polaroid Zone) -->
         <section id="polaroidZone" class="polaroid-zone">
-            <!-- Polaroid photos will drop here -->
+            <!-- Messages will drop here as "Case Files" -->
             <div id="loadingIndicator" class="text-center py-12">
-                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-                <p class="mt-4 text-white text-lg font-semibold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Loading birthday wishes...</p>
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-gold"></div>
+                <p class="mt-4 text-gold text-lg font-bold tracking-wider">LOADING EVIDENCE...</p>
             </div>
         </section>
     </div>
-    
+
+    <!-- Police Line Tape (Bottom) -->
+    <div class="police-tape-container bottom-tape">
+        <div class="police-tape-reverse">CRIME SCENE DO NOT CROSS &nbsp;&nbsp;&nbsp; CRIME SCENE DO NOT CROSS
+            &nbsp;&nbsp;&nbsp; CRIME SCENE DO NOT CROSS</div>
+    </div>
+
     <!-- Modal for Adding Message -->
-    <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 transform transition-all animate-scaleIn">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-800">✍️ Your Message</h2>
-                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 text-3xl leading-none">
+    <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50 p-4">
+        <div
+            class="bg-gray-900 border-4 border-gold rounded-xl shadow-2xl max-w-lg w-full p-8 transform transition-all animate-scaleIn relative overflow-hidden">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                <h2 class="text-3xl font-bold text-white font-oswald uppercase track-wider">📝 File A Report</h2>
+                <button id="closeModalBtn"
+                    class="text-gray-400 hover:text-white text-4xl leading-none focus:outline-none">
                     &times;
                 </button>
             </div>
-            
+
             <!-- Message Form -->
-            <form id="messageForm" class="space-y-6">
+            <form id="messageForm" class="space-y-6 relative z-10">
                 <!-- Name Input -->
                 <div>
-                    <label for="nameInput" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Your Name
+                    <label for="nameInput" class="block text-sm font-bold text-gold mb-2 uppercase tracking-wide">
+                        Reporting Officer (Your Name)
                     </label>
-                    <input 
-                        type="text" 
-                        id="nameInput" 
-                        required 
-                        placeholder="Enter your name"
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
-                    >
+                    <input type="text" id="nameInput" required placeholder="Officer Name..."
+                        class="w-full px-4 py-3 bg-gray-800 border-2 border-gray-600 rounded-lg text-white placeholder-gray-500 focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-all">
                 </div>
-                
+
                 <!-- Message Input -->
                 <div>
-                    <label for="messageInput" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Birthday Message
+                    <label for="messageInput" class="block text-sm font-bold text-gold mb-2 uppercase tracking-wide">
+                        Statement / Birthday Wish
                     </label>
-                    <textarea 
-                        id="messageInput" 
-                        required 
-                        rows="4" 
-                        placeholder="Write your birthday wishes for Cary..."
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all resize-none"
-                    ></textarea>
+                    <textarea id="messageInput" required rows="4" placeholder="Enter your statement for the record..."
+                        class="w-full px-4 py-3 bg-gray-800 border-2 border-gray-600 rounded-lg text-white placeholder-gray-500 focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-all resize-none"></textarea>
                 </div>
-                
+
                 <!-- File Upload -->
                 <div>
-                    <label for="fileInput" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Add Photo/Video (Optional)
+                    <label for="fileInput" class="block text-sm font-bold text-gold mb-2 uppercase tracking-wide">
+                        Attach Evidence (Photo/Video)
                     </label>
-                    <input 
-                        type="file" 
-                        id="fileInput" 
-                        accept="image/*,video/*"
-                        class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 transition-all cursor-pointer"
-                    >
-                    <p class="text-xs text-gray-500 mt-2">Max 100MB • Images or Videos</p>
+                    <input type="file" id="fileInput" accept="image/*,video/*"
+                        class="w-full px-4 py-3 bg-gray-800 border-2 border-dashed border-gray-600 rounded-lg text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-bold file:bg-blue-900 file:text-gold hover:file:bg-blue-800 transition-all cursor-pointer">
+                    <p class="text-xs text-gray-500 mt-2">Max 25MB • Evidence must be clear</p>
                 </div>
-                
+
                 <!-- Submit Button -->
-                <button 
-                    type="submit" 
-                    id="submitBtn"
-                    class="w-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
-                >
-                    🏝️ Send Birthday Wishes 🏝️
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-blue-900 hover:bg-blue-800 border-2 border-gold text-white font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-102 transition-all duration-300 uppercase tracking-widest">
+                    Submit Report
                 </button>
-                
+
                 <!-- Upload Progress -->
                 <div id="uploadProgress" class="hidden">
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div id="progressBar" class="bg-gradient-to-r from-teal-400 to-cyan-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    <div class="w-full bg-gray-700 rounded-full h-2.5 mt-4">
+                        <div id="progressBar" class="bg-gold h-2.5 rounded-full transition-all duration-300"
+                            style="width: 0%"></div>
                     </div>
-                    <p id="progressText" class="text-sm text-gray-600 mt-2 text-center">Uploading...</p>
+                    <p id="progressText" class="text-sm text-gold mt-2 text-center font-mono">UPLOADING EVIDENCE...</p>
                 </div>
             </form>
         </div>
     </div>
-    
+
     <!-- Media Preview Modal -->
     <div id="mediaPreviewModal" class="media-preview-modal hidden">
         <div class="media-preview-overlay"></div>
         <button id="closePreviewBtn" class="media-preview-close">&times;</button>
-        <button id="downloadMediaBtn" class="media-preview-download" title="Download">⬇</button>
+        <button id="downloadMediaBtn" class="media-preview-download" title="Download Evidence">⬇</button>
         <button id="prevMediaBtn" class="media-preview-nav media-preview-prev">‹</button>
         <button id="nextMediaBtn" class="media-preview-nav media-preview-next">›</button>
         <div class="media-preview-content">
@@ -159,10 +173,10 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Main Application Script (includes Firebase) -->
     <script type="module" src="/script.js"></script>
-    
-</body>
-</html>
 
+</body>
+
+</html>
