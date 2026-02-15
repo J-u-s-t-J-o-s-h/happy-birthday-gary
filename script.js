@@ -328,7 +328,7 @@ function listenForMessages() {
         showToast('Could not load messages. Check Firebase rules and console.', 'error');
         if (loadingIndicator) {
             loadingIndicator.innerHTML = `
-                <div class="text-center py-12" style="color: #ef4444;">
+                <div class="polaroid-empty-state polaroid-empty-state--error">
                     <p class="font-bold">Failed to load messages.</p>
                     <p class="text-sm mt-2">Check browser console (F12) for details.</p>
                 </div>
@@ -340,9 +340,9 @@ function listenForMessages() {
     setTimeout(() => {
         if (messageCount === 0 && loadingIndicator) {
             loadingIndicator.innerHTML = `
-                <div class="text-center py-12" style="position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 4; width: 100%; max-width: 600px;">
-                    <span style="font-size: 4rem;">🚔</span>
-                    <p class="mt-4 text-xl font-bold" style="color: #FFD700; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">No reports filed yet. Be the first to testify!</p>
+                <div class="polaroid-empty-state">
+                    <span class="polaroid-empty-state__icon">🚔</span>
+                    <p class="polaroid-empty-state__text">No reports filed yet. Be the first to testify!</p>
                 </div>
             `;
         }

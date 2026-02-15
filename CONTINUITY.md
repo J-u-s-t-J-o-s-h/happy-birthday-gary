@@ -15,8 +15,6 @@ A digital guestbook/celebration site for Grandpa Gary's 80th birthday. Guests ca
 
 **Theme:** Police Officer (Navy Blue / Gold / Silver) — "Grandpa Gary's 80th Birthday Bash!"
 
-**Event Details (in UI):** June 15th • The Community Hall
-
 ---
 
 ## Tech Stack
