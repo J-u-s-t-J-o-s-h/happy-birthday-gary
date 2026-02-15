@@ -6,15 +6,30 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, push, onChildAdded, query, orderByChild } from 'firebase/database';
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
-// 🔥 FIREBASE CONFIG (using environment variables or fallback to hardcoded)
+// 🔥 FIREBASE CONFIG - Environment variables only (no hardcoded credentials)
+// Copy .env.example to .env and add your Firebase config from the Console
+const required = [
+    'VITE_FIREBASE_API_KEY',
+    'VITE_FIREBASE_AUTH_DOMAIN',
+    'VITE_FIREBASE_DATABASE_URL',
+    'VITE_FIREBASE_PROJECT_ID',
+    'VITE_FIREBASE_STORAGE_BUCKET',
+    'VITE_FIREBASE_MESSAGING_SENDER_ID',
+    'VITE_FIREBASE_APP_ID'
+];
+const missing = required.filter(key => !import.meta.env[key]);
+if (missing.length) {
+    throw new Error(`Missing Firebase env vars: ${missing.join(', ')}. Copy .env.example to .env and add your config.`);
+}
+
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyA7agw9JxaxOHFvfShHaPfEld3ld9zrSGg",
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "garys-80th-birthday.firebaseapp.com",
-    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "https://garys-80th-birthday-default-rtdb.firebaseio.com/",
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "garys-80th-birthday",
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "garys-80th-birthday.firebasestorage.app",
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "626844869714",
-    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:626844869714:web:a46cccc877d9ec7e2d2b8b"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
