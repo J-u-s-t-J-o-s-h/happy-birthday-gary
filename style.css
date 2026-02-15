@@ -167,41 +167,57 @@ body {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
 }
 
-/* Badge Icon CSS */
-.police-badge-icon {
-    width: 100px;
-    height: 120px;
-    background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
-    clip-path: polygon(50% 0%, 100% 25%, 85% 100%, 50% 100%, 15% 100%, 0% 25%); /* Simple shield shape */
+/* Header - Compact spacing */
+.header-compact {
+    margin-top: -24px;
+}
+
+/* Header Badge + Title Overlap Layout */
+.header-badge-overlap {
+    position: relative;
+    min-height: 750px;
+    margin-top: -40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-    border: 2px solid #fff; /* Not visible with clip-path usually, but good fallback */
+}
+
+.badge-container {
     position: relative;
-    animation: badgeShine 4s infinite;
+    z-index: 1;
 }
 
-.police-badge-icon::after {
-    content: '';
-    position: absolute;
-    top: 5px; left: 5px; right: 5px; bottom: 5px;
-    border: 2px solid #000;
-    clip-path: polygon(50% 5%, 95% 25%, 82% 95%, 50% 95%, 18% 95%, 5% 25%);
-}
-
-.police-badge-icon span {
-    color: #000;
-    font-family: 'Oswald', sans-serif;
-    font-weight: bold;
+.birthday-title-overlap {
+    position: relative;
     z-index: 2;
+    margin-top: -220px;
+    margin-bottom: 0;
 }
 
-.badge-number {
-    font-size: 2.5rem;
-    line-height: 1;
+/* Badge Icon - Custom SVG - Override Tailwind/global img styles */
+.police-badge-icon {
+    width: 728px;
+    height: 874px;
+    max-width: 95vw;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    background: transparent;
+    padding: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: content-box !important;
+    border: none !important;
+    border-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-color: rgba(0, 0, 0, 0) !important;
+    position: static !important;
+    left: unset !important;
+    top: unset !important;
+    animation: badgeShine 4s infinite;
 }
 
 @keyframes badgeShine {
@@ -507,14 +523,37 @@ textarea::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 4px; }
 .animate-bounce-slow { animation: bounceSlow 3s ease-in-out infinite; }
 .animate-pulse-soft { animation: pulseSoft 2s ease-in-out infinite; }
 
+/* ========================================
+   3D PATROL COP OVERLAY
+   ======================================== */
+#patrol-cop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+#patrol-cop-overlay canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .police-tape { font-size: 1rem; letter-spacing: 1px; }
     .header-text { font-size: 3.5rem !important; }
     .subheader-text { font-size: 1.2rem !important; }
-    .police-badge-icon { width: 70px; height: 90px; }
-    .badge-number { font-size: 1.8rem; }
+    .police-badge-icon { width: min(560px, 95vw); height: auto; aspect-ratio: 5/6; }
+    .header-badge-overlap { min-height: 620px; }
+    .birthday-title-overlap { margin-top: -140px; }
     
     .polaroid-card { width: 160px; }
     .polaroid-photo { height: 140px; }
+}
+
+@media (max-width: 480px) {
+    .police-badge-icon { width: min(500px, 95vw); }
+    .header-text { font-size: 2.5rem !important; }
+    .header-badge-overlap { min-height: 550px; }
+    .birthday-title-overlap { margin-top: -110px; }
 }

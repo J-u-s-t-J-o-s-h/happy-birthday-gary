@@ -32,6 +32,9 @@
     <!-- Confetti Canvas -->
     <canvas id="confetti-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></canvas>
 
+    <!-- 3D Patrol Cop Overlay (desktop only, respects reduced-motion) -->
+    <div id="patrol-cop-overlay"></div>
+
     <!-- Police Line Tape (Top) -->
     <div class="police-tape-container top-tape">
         <div class="police-tape">POLICE LINE DO NOT CROSS &nbsp;&nbsp;&nbsp; POLICE LINE DO NOT CROSS &nbsp;&nbsp;&nbsp;
@@ -45,28 +48,25 @@
     <div class="siren-glow"></div>
 
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-12 max-w-6xl relative z-10">
+    <div class="container mx-auto px-4 pt-4 pb-12 max-w-6xl relative z-10">
 
         <!-- Header Section -->
-        <header class="text-center mb-16 animate-fadeIn relative">
-            <div class="badge-container mx-auto mb-6">
-                <!-- CSS Badge Representation -->
-                <div class="police-badge-icon">
-                    <span>POLICE</span>
-                    <span class="badge-number">80</span>
+        <header class="text-center mb-12 animate-fadeIn relative header-compact">
+            <div class="header-badge-overlap">
+                <div class="badge-container">
+                    <img src="/police-badge.svg" alt="Police Badge - 80" class="police-badge-icon">
                 </div>
+                <h1 id="birthdayTitle" class="birthday-title-overlap text-6xl md:text-8xl font-bold animate-bounce-slow header-text uppercase"
+                    style="cursor: pointer; user-select: none;">
+                    <span class="text-gold">Grandpa Gary's</span>
+                    <br>
+                    <span class="text-white">80th Birthday Bash!</span>
+                </h1>
             </div>
 
-            <h1 id="birthdayTitle" class="text-6xl md:text-8xl font-bold mb-2 animate-bounce-slow header-text uppercase"
-                style="cursor: pointer; user-select: none;">
-                <span class="text-gold">Grandpa Gary's</span>
-                <br>
-                <span class="text-white">80th Birthday Bash!</span>
-            </h1>
+            <div class="police-tape-divider my-4"></div>
 
-            <div class="police-tape-divider my-6"></div>
-
-            <p class="text-xl md:text-3xl mb-10 subheader-text font-serif text-gray-300">
+            <p class="text-xl md:text-3xl mb-6 subheader-text font-serif text-gray-300">
                 Come celebrate with our favorite retired officer!
                 <br>
                 <span class="text-gold text-lg mt-2 block">JUNE 15TH • THE COMMUNITY HALL</span>
@@ -174,6 +174,8 @@
         </div>
     </div>
 
+    <!-- Patrol Cop Overlay (3D avatar) -->
+    <script type="module" src="/patrol-cop-overlay.js"></script>
     <!-- Main Application Script (includes Firebase) -->
     <script type="module" src="/script.js"></script>
 
