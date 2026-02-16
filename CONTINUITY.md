@@ -2,7 +2,7 @@
 
 **Purpose:** This document records all work done on the project to date so a coworker can pick up seamlessly.
 
-**Last Updated:** February 2025
+**Last Updated:** February 2026
 
 ---
 
@@ -26,7 +26,7 @@ A digital guestbook/celebration site for Grandpa Gary's 80th birthday. Guests ca
 | Build | Vite 7.x |
 | Backend | Firebase Realtime Database + Firebase Storage |
 | Hosting (planned) | Vercel |
-| Key Libraries | `canvas-confetti`, `heic2any` (iPhone HEIC → JPEG), `three` (3D overlay) |
+| Key Libraries | `canvas-confetti`, `heic2any` (iPhone HEIC → JPEG), `three` (patrol overlay + car chase) |
 
 ---
 
@@ -43,11 +43,14 @@ happy-birthday-gary/
 ├── storage.rules       # Storage rules (25MB limit)
 ├── vercel.json         # Vercel build config
 ├── cors.json           # CORS for Firebase Storage (applied via gsutil)
-├── patrol-cop-overlay.js # 3D patrol avatar (vanilla Three.js)
+├── patrol-cop-overlay.js   # 3D patrol avatar (vanilla Three.js)
+├── police-car-chase.js    # 3D car chase at bottom (vanilla Three.js)
 ├── public/
-│   ├── police-badge.svg  # Custom badge asset (replaces CSS badge)
+│   ├── police-badge.svg   # Custom badge asset
 │   └── models/
-│       └── patrol-cop.glb # Rigged police model (user-provided)
+│       ├── patrol-cop.glb # Rigged police model for overlay (user-provided)
+│       ├── police-car.glb # Police car for chase (user-provided)
+│       └── sports-car.glb # Sports car being chased (user-provided)
 ├── .env                 # Firebase credentials (gitignored)
 ├── .env.example         # Template for env vars
 ├── .firebaserc          # Firebase project alias (garys-80th-birthday)
@@ -118,6 +121,19 @@ happy-birthday-gary/
 - Config: `speed`, `scale`, `waypoints` in `patrol-cop-overlay.js`
 - Graceful fallback if model missing (console warning, no crash)
 
+### Phase 10: Polaroid Zone & Layout Fixes
+- Fixed loading/empty state overlap: removed `position: fixed`, use flow layout
+- Added `polaroid-loading` and `polaroid-empty-state` CSS classes
+- Responsive sizing for loading spinner and empty state
+- Removed "JUNE 15TH • THE COMMUNITY HALL" from header
+
+### Phase 11: 3D Police Car Chase
+- Added `police-car-chase.js`: Two police cars chase a sports car along curved path
+- Models: `police-car.glb` (Sketchfab/Sprotteglace3d), `sports-car.glb` in `public/models/`
+- Curved CatmullRom path, flashing red/blue lights on police cars, headlights on sports car
+- Mobile enabled with smaller scale; respects `prefers-reduced-motion`
+- Config: `speed`, `chaseGap`, `backupCopGap` in `police-car-chase.js`
+
 ---
 
 ## Configuration Reference
@@ -156,6 +172,8 @@ All in `.env` — copy from `.env.example`:
 5. **HEIC:** iPhone photos are converted client-side before upload; no server-side handling.
 
 6. **Patrol overlay model:** Place `patrol-cop.glb` in `public/models/`. Without it, overlay does not render (graceful). Tweak `CONFIG.speed` and `CONFIG.scale` in `patrol-cop-overlay.js`.
+
+7. **Police car chase models:** Place `police-car.glb` and `sports-car.glb` in `public/models/`. Tweak `CONFIG.speed`, `CONFIG.chaseGap`, `CONFIG.backupCopGap` in `police-car-chase.js`.
 
 ---
 

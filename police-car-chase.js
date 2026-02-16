@@ -8,11 +8,12 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const CONFIG = {
   enabled: true,
-  speed: 0.24,
+  speed: 0.2,
   policeCarUrl: '/models/police-car.glb',
   sportsCarUrl: '/models/sports-car.glb',
   targetCarSize: 1.5,
   chaseGap: 0.18,
+  backupCopGap: 0.15,
 };
 
 // Curved path - cars drive along this spline (realistic winding road)
@@ -28,7 +29,8 @@ const PATH_POINTS = [
   new THREE.Vector3(-5, -0.9, -0.5),
 ];
 
-let scene, camera, renderer, carGroup, sportsCarGroup, lightRed, lightBlue, pathCurve, clock;
+let scene, camera, renderer, carGroup, policeCar2Group, sportsCarGroup, pathCurve, clock;
+let policeCarLights = [];
 let pathProgress = 0;
 let pathDirection = 1;
 let animationFrameId = null;
@@ -44,21 +46,15 @@ function shouldShow() {
 }
 
 function addFlashingLights(group, lightY = 0.45) {
-  const scale = 1.4;
-  const barGeo = new THREE.BoxGeometry(0.5 * scale, 0.08 * scale, 0.12 * scale);
-  const barMat = new THREE.MeshLambertMaterial({ color: 0x0a0a0a });
-  const bar = new THREE.Mesh(barGeo, barMat);
-  bar.position.set(0, lightY, 0);
-  group.add(bar);
-
-  const lightGeo = new THREE.BoxGeometry(0.14 * scale, 0.07 * scale, 0.1 * scale);
+  const scale = 1.2;
+  const lightGeo = new THREE.BoxGeometry(0.12 * scale, 0.05 * scale, 0.08 * scale);
   const redMat = new THREE.MeshBasicMaterial({ color: 0xff1111, transparent: true });
-  lightRed = new THREE.Mesh(lightGeo, redMat);
+  const lightRed = new THREE.Mesh(lightGeo, redMat);
   lightRed.position.set(-0.18, lightY, 0);
   group.add(lightRed);
 
   const blueMat = new THREE.MeshBasicMaterial({ color: 0x4488ff, transparent: true });
-  lightBlue = new THREE.Mesh(lightGeo, blueMat);
+  const lightBlue = new THREE.Mesh(lightGeo, blueMat);
   lightBlue.position.set(0.18, lightY, 0);
   group.add(lightBlue);
 
@@ -72,6 +68,26 @@ function addFlashingLights(group, lightY = 0.45) {
 
   lightRed.userData.glow = redGlow;
   lightBlue.userData.glow = blueGlow;
+  policeCarLights.push({ lightRed, lightBlue });
+}
+
+function addHeadlights(group, model) {
+  const box = new THREE.Box3().setFromObject(model);
+  const size = new THREE.Vector3();
+  box.getSize(size);
+  const lightY = size.y * 0.25;
+  const lightZ = size.z * 0.4;
+  const lightGeo = new THREE.BoxGeometry(0.06, 0.04, 0.03);
+  const mat = new THREE.MeshBasicMaterial({ color: 0xffffee });
+  const left = new THREE.Mesh(lightGeo, mat.clone());
+  left.position.set(-0.12, lightY, lightZ);
+  group.add(left);
+  const right = new THREE.Mesh(lightGeo, mat.clone());
+  right.position.set(0.12, lightY, lightZ);
+  group.add(right);
+  const glow = new THREE.PointLight(0xffffee, 0.8, 1);
+  glow.position.set(0, lightY, lightZ);
+  group.add(glow);
 }
 
 function loadModel(url, targetSize, sizeMultiplier = 1) {
@@ -118,11 +134,20 @@ function loadCars(callback) {
       carGroup.rotation.x = 0.12;
       carGroup.position.copy(pathCurve.getPoint(0));
       scene.add(carGroup);
+
+      policeCar2Group = new THREE.Group();
+      policeCar2Group.add(policeModel.clone(true));
+      addFlashingLights(policeCar2Group, lightY);
+      policeCar2Group.rotation.x = 0.12;
+      const cop2Progress = (0 - CONFIG.backupCopGap + 1) % 1;
+      policeCar2Group.position.copy(pathCurve.getPoint(cop2Progress));
+      scene.add(policeCar2Group);
     }
 
     if (sportsModel) {
       sportsCarGroup = new THREE.Group();
       sportsCarGroup.add(sportsModel);
+      addHeadlights(sportsCarGroup, sportsModel);
       sportsCarGroup.rotation.x = 0.12;
       const sportsProgress = (pathProgress + CONFIG.chaseGap) % 1;
       sportsCarGroup.position.copy(pathCurve.getPoint(sportsProgress));
@@ -188,6 +213,16 @@ function animate() {
     carGroup.rotation.y = carRotation;
   }
 
+  if (policeCar2Group) {
+    const cop2Progress = pathDirection > 0
+      ? (pathProgress - CONFIG.backupCopGap + 1) % 1
+      : (pathProgress + CONFIG.backupCopGap) % 1;
+    const cop2Pos = pathCurve.getPoint(cop2Progress);
+    const cop2Tangent = pathCurve.getTangent(cop2Progress);
+    policeCar2Group.position.copy(cop2Pos);
+    policeCar2Group.rotation.y = Math.atan2(cop2Tangent.x, cop2Tangent.z) + (pathDirection < 0 ? Math.PI : 0);
+  }
+
   if (sportsCarGroup) {
     const sportsProgress = pathDirection > 0
       ? (pathProgress + CONFIG.chaseGap) % 1
@@ -198,17 +233,13 @@ function animate() {
     sportsCarGroup.rotation.y = Math.atan2(sportsTangent.x, sportsTangent.z) + (pathDirection < 0 ? Math.PI : 0);
   }
 
-  if (lightRed && lightBlue) {
-    const t = clock.getElapsedTime();
-    const flash = Math.sin(t * 14) > 0 ? 1 : 0.08;
+  const t = clock.getElapsedTime();
+  const flash = Math.sin(t * 14) > 0 ? 1 : 0.08;
+  for (const { lightRed, lightBlue } of policeCarLights) {
     lightRed.material.opacity = flash;
     lightBlue.material.opacity = 1 - flash + 0.08;
-    if (lightRed.userData.glow) {
-      lightRed.userData.glow.intensity = flash * 2.5;
-    }
-    if (lightBlue.userData.glow) {
-      lightBlue.userData.glow.intensity = (1 - flash + 0.08) * 2.5;
-    }
+    if (lightRed.userData.glow) lightRed.userData.glow.intensity = flash * 2.5;
+    if (lightBlue.userData.glow) lightBlue.userData.glow.intensity = (1 - flash + 0.08) * 2.5;
   }
 
   renderer.render(scene, camera);
@@ -229,7 +260,8 @@ export function destroyPoliceCarChase() {
     renderer.domElement.parentNode.removeChild(renderer.domElement);
   }
   renderer?.dispose();
-  scene = camera = renderer = carGroup = sportsCarGroup = lightRed = lightBlue = null;
+  scene = camera = renderer = carGroup = policeCar2Group = sportsCarGroup = null;
+  policeCarLights = [];
 }
 
 export function initPoliceCarChase() {

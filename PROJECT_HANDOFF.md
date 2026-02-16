@@ -15,7 +15,7 @@ A digital guestbook/celebration site for Grandpa Gary's 80th birthday. Users can
 - **Key Libraries:**
   - `canvas-confetti`: For celebrations.
   - `heic2any`: Auto-converts iPhone photos (.HEIC) to JPEG before upload.
-  - `three`: 3D patrol cop overlay (vanilla Three.js).
+  - `three`: 3D overlays (patrol cop + police car chase).
 
 ## ✅ Completed Work
 - **Theme Overhaul:** 
@@ -86,6 +86,16 @@ A lightweight 3D police avatar patrols the viewport on desktop (vanilla Three.js
 - **Tweak speed/scale:** Edit `CONFIG.speed` and `CONFIG.scale` in `patrol-cop-overlay.js`.
 - **Disabled when:** `prefers-reduced-motion: reduce`, viewport &lt; 768px, or `enabled: false` in config.
 - **Without model:** Overlay does not crash; a console warning is logged.
+
+## 3D Police Car Chase
+
+Two police cars chase a sports car along a curved path at the bottom of the viewport.
+
+- **Models:** `police-car.glb`, `sports-car.glb` in `public/models/`
+- **Config** (`police-car-chase.js`): `speed`, `chaseGap` (sports car lead), `backupCopGap` (second cop behind first)
+- **Features:** Flashing red/blue lights on police cars, headlights on sports car
+- **Mobile:** Enabled (smaller scale on &lt;768px)
+- **Disabled when:** `prefers-reduced-motion: reduce`
 
 ## 📝 Optional (Future)
 - **Tailwind optimization:** Move from CDN to build step for smaller CSS if load times are a concern.
