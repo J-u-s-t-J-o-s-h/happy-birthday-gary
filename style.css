@@ -678,5 +678,9 @@ textarea::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 4px; }
 
     /* Media preview: ensure long messages scroll on mobile */
     .media-preview-content { max-height: 85vh; }
-    .media-preview-container > div p { font-size: 1.5rem !important; }
+    .media-preview-container > div p {
+        font-size: 1.5rem !important;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif !important;
+        font-weight: 500 !important;
+    }
 }
